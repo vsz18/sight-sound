@@ -1,0 +1,3160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sight & Sound</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── LIGHT MODE (default) ─────────────────────────────── */
+:root{
+  --glass-bg:rgba(255,255,255,0.62);
+  --glass-bg-hover:rgba(255,255,255,0.82);
+  --glass-border:rgba(0,0,0,0.07);
+  --glass-border-strong:rgba(0,0,0,0.13);
+  --text-1:rgba(14,9,28,0.90);
+  --text-2:rgba(14,9,28,0.44);
+  --text-3:rgba(14,9,28,0.22);
+  --lav:#7250c4;
+  --rose:#c0457f;
+  --gold:#9a6c12;
+  --teal:#208070;
+  --sidebar:72px;
+  /* theme-specific tokens */
+  --page-bg:linear-gradient(135deg,#f8f6f2 0%,#f5f2f9 45%,#f9f2f6 100%);
+  --sidebar-bg:rgba(255,255,255,0.72);
+  --sidebar-border:rgba(0,0,0,0.07);
+  --modal-bg:rgba(252,250,255,0.98);
+  --input-bg:rgba(0,0,0,0.035);
+  --input-bg-focus:rgba(0,0,0,0.055);
+  --option-bg:#f8f5ff;
+  --row-divider:rgba(0,0,0,0.05);
+  --bar-track:rgba(0,0,0,0.08);
+  --bnav-bg:rgba(250,248,255,0.94);
+  --bnav-border:rgba(0,0,0,0.07);
+  --balance-bg:linear-gradient(135deg,rgba(140,110,220,0.09),rgba(200,100,150,0.06));
+  --balance-border:rgba(140,110,220,0.16);
+  --orb-1:rgba(170,145,230,0.22);
+  --orb-2:rgba(215,145,185,0.14);
+  --orb-3:rgba(100,185,210,0.10);
+  --nav-tip-bg:rgba(14,8,35,0.94);
+}
+
+/* ── DARK MODE ────────────────────────────────────────── */
+[data-theme="dark"]{
+  --glass-bg:rgba(255,255,255,0.05);
+  --glass-bg-hover:rgba(255,255,255,0.09);
+  --glass-border:rgba(255,255,255,0.09);
+  --glass-border-strong:rgba(255,255,255,0.16);
+  --text-1:rgba(255,255,255,0.92);
+  --text-2:rgba(255,255,255,0.52);
+  --text-3:rgba(255,255,255,0.26);
+  --lav:#c4b5f4;
+  --rose:#f0abca;
+  --gold:#e8d5a3;
+  --teal:#86e0d4;
+  --page-bg:linear-gradient(160deg,rgb(31,31,31) 0%,rgb(38,38,38) 50%,rgb(31,31,31) 100%);
+  --sidebar-bg:rgba(255,255,255,0.03);
+  --sidebar-border:rgba(255,255,255,0.08);
+  --modal-bg:rgb(42,42,42);
+  --input-bg:rgba(255,255,255,0.06);
+  --input-bg-focus:rgba(255,255,255,0.10);
+  --option-bg:rgb(49,49,49);
+  --row-divider:rgba(255,255,255,0.05);
+  --bar-track:rgba(255,255,255,0.09);
+  --bnav-bg:rgba(31,31,31,0.95);
+  --bnav-border:rgba(255,255,255,0.09);
+  --balance-bg:linear-gradient(135deg,rgba(196,181,244,.08),rgba(240,171,202,.05));
+  --balance-border:rgba(196,181,244,0.14);
+  --orb-1:rgba(100,50,210,0.12);
+  --orb-2:rgba(200,60,130,0.08);
+  --orb-3:rgba(60,160,200,0.06);
+  --nav-tip-bg:rgba(31,31,31,0.97);
+}
+
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-1);overflow:hidden}
+body{background:var(--page-bg);position:relative;transition:background .35s ease}
+
+/* ambient orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+.orb-1{width:700px;height:700px;background:radial-gradient(circle,var(--orb-1) 0%,transparent 70%);top:-250px;left:-150px;animation:drift1 22s ease-in-out infinite}
+.orb-2{width:550px;height:550px;background:radial-gradient(circle,var(--orb-2) 0%,transparent 70%);bottom:-180px;right:-120px;animation:drift2 28s ease-in-out infinite}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,var(--orb-3) 0%,transparent 70%);top:40%;left:40%;animation:drift3 18s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,50px)}66%{transform:translate(-25px,25px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}33%{transform:translate(-45px,-25px)}66%{transform:translate(25px,-45px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+
+/* layout */
+.app{display:flex;height:100vh;position:relative;z-index:1}
+
+/* sidebar */
+.sidebar{
+  width:var(--sidebar);height:100vh;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;padding:22px 0;
+  background:var(--sidebar-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-right:1px solid var(--sidebar-border);z-index:10;transition:background .35s,border-color .35s
+}
+.logo{
+  font-family:'Fraunces',serif;font-size:13px;font-weight:400;letter-spacing:0;
+  text-align:center;line-height:1.2;color:var(--text-1);margin-bottom:36px;padding:0 6px
+}
+.logo em{display:block;font-style:normal;font-size:9px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-2);margin-top:3px}
+.nav{display:flex;flex-direction:column;gap:6px;width:100%;padding:0 8px}
+.nav-btn{
+  width:100%;aspect-ratio:1;border-radius:14px;border:1px solid transparent;
+  background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);transition:all .2s;position:relative
+}
+.nav-btn svg{width:20px;height:20px;stroke-width:1.6}
+.nav-btn:hover{background:var(--glass-bg);color:var(--text-1);border-color:var(--glass-border)}
+.nav-btn.active{background:rgba(196,181,244,0.14);color:var(--lav);border-color:rgba(196,181,244,0.22)}
+.nav-tip{
+  position:absolute;left:calc(100% + 12px);
+  background:var(--nav-tip-bg);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.95);
+  font-size:12px;font-weight:600;padding:5px 11px;border-radius:8px;
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:99
+}
+.nav-btn:hover .nav-tip{opacity:1}
+.sidebar-foot{margin-top:auto;padding:0 8px;width:100%}
+
+/* main */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;padding:32px}
+.main::-webkit-scrollbar{width:3px}
+.main::-webkit-scrollbar-thumb{background:var(--glass-border);border-radius:2px}
+.main::-webkit-scrollbar-track{background:transparent}
+
+/* panel */
+.panel{display:none;animation:fadeIn .3s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.ph{margin-bottom:28px}
+.ph-eye{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-2);margin-bottom:7px}
+.ph-title{font-family:'Fraunces',serif;font-size:34px;font-weight:400;line-height:1.1;color:var(--text-1)}
+
+/* glass card */
+.gc{background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:22px}
+.gc-sm{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:14px;padding:14px}
+
+.slabel{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:12px}
+.stitle{font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:var(--text-1);margin-bottom:14px}
+
+/* ===== SIGHT ===== */
+.sight-layout{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.vault-layout{margin-top:20px}
+
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.cal-month{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--text-1)}
+.cal-nav{width:34px;height:34px;border-radius:10px;border:1px solid var(--glass-border);
+  background:var(--glass-bg);color:var(--text-1);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;font-size:16px;transition:all .2s}
+.cal-nav:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong)}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dl{text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-3);padding:8px 0}
+.cal-day{
+  aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:11px;cursor:pointer;transition:all .15s;position:relative;gap:2px;
+  font-size:13px;font-weight:500;color:var(--text-2)
+}
+.trip-chip{width:calc(100% - 4px);padding:1px 4px;border-radius:3px;font-size:8px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;cursor:pointer}
+.stop-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:var(--input-bg);margin-bottom:6px}
+.stop-dest{font-size:13px;font-weight:600;color:var(--text-1);flex:1}
+.stop-dates{font-size:11px;color:var(--text-2);white-space:nowrap}
+.stop-del{width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-3);font-size:10px;cursor:pointer;flex-shrink:0}
+.stop-del:hover{color:var(--text-1);background:rgba(0,0,0,.08)}
+.cal-day:hover{background:var(--glass-bg);color:var(--text-1)}
+.cal-day.today{background:rgba(196,181,244,0.14);color:var(--lav);border:1px solid rgba(196,181,244,0.28)}
+.cal-day.other{color:var(--text-3)}
+.cal-day.selected{background:rgba(196,181,244,0.22);color:var(--lav);border:1px solid rgba(196,181,244,0.4)}
+.day-n{line-height:1;font-size:13px}
+.dots{display:flex;gap:2px}
+.dot{width:4px;height:4px;border-radius:50%}
+.dot-a{background:var(--lav)}
+.dot-b{background:var(--rose)}
+.dot-s{background:var(--gold)}
+
+/* upcoming events */
+.ev-list{display:flex;flex-direction:column;gap:8px}
+.ev-card{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-radius:13px;background:var(--glass-bg);border:1px solid var(--glass-border);
+  cursor:pointer;transition:all .2s
+}
+.ev-card:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong)}
+.ev-bar{width:3px;height:34px;border-radius:2px;flex-shrink:0}
+.ev-info{flex:1}
+.ev-name{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:2px}
+.ev-date{font-size:11px;color:var(--text-2)}
+.ev-who{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:20px}
+.who-a{background:rgba(196,181,244,0.15);color:var(--lav)}
+.who-b{background:rgba(240,171,202,0.15);color:var(--rose)}
+.who-s{background:rgba(232,213,163,0.15);color:var(--gold)}
+
+/* vault */
+.vault-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.vc{
+  aspect-ratio:.72;border-radius:16px;border:1px solid var(--glass-border);
+  background:var(--glass-bg);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;cursor:pointer;transition:all .2s;padding:14px;
+  text-align:center;position:relative;overflow:hidden
+}
+.vc:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong);transform:translateY(-2px)}
+.vc.add{border-style:dashed;color:var(--text-2)}
+.vc.add:hover{color:var(--text-1)}
+.vc-icon{font-size:30px;position:relative;z-index:1}
+.vc-name{font-size:11px;font-weight:600;color:var(--text-1);line-height:1.3;position:relative;z-index:1}
+.vc-type{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);position:relative;z-index:1}
+.vc-glow{position:absolute;inset:0;opacity:.07;border-radius:inherit}
+.vc-del{
+  position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;
+  background:rgba(0,0,0,0.5);border:none;color:var(--text-2);font-size:12px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2
+}
+.vc:hover .vc-del{display:flex}
+
+/* ===== SOUND ===== */
+.sound-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+
+.featured{
+  border-radius:22px;overflow:hidden;position:relative;min-height:190px;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:26px;margin-bottom:18px
+}
+.featured-bg{position:absolute;inset:0;background:linear-gradient(135deg,#6b2d8b,#2d6b8b,#8b2d6b);opacity:.65}
+.featured-fg{position:relative;z-index:1}
+.feat-label{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:7px}
+.feat-title{font-family:'Fraunces',serif;font-size:26px;font-weight:400;color:#fff;margin-bottom:3px}
+.feat-artist{font-size:14px;color:rgba(255,255,255,.65)}
+.feat-note{font-family:'Fraunces',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,.5);margin-top:8px;line-height:1.5}
+
+.song-list{display:flex;flex-direction:column;gap:4px}
+.song-entry{display:flex;flex-direction:column;gap:0;padding:4px 0;border-bottom:1px solid var(--row-divider)}
+.song-entry:last-child{border-bottom:none}
+.song-row{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;flex:1;
+  border-radius:10px;border:1px solid transparent;cursor:pointer;transition:all .15s;min-width:0
+}
+.song-row:hover{background:var(--glass-bg);border-color:var(--glass-border)}
+.song-row.is-featured{background:rgba(114,80,196,.07);border-color:rgba(114,80,196,.25)}
+.song-row.is-featured .song-n::after{content:'♪';display:block;font-size:11px;color:var(--lav)}
+.song-n{width:16px;font-size:11px;color:var(--text-3);text-align:center;flex-shrink:0}
+.song-art{width:32px;height:32px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.song-info{flex:1;min-width:0}
+.song-t{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-a{font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-sp-inline{flex-shrink:0;border-radius:10px;overflow:hidden;width:260px;align-self:stretch}
+.song-sp-inline iframe{display:block;border-radius:10px}
+.song-sp-mock{flex-shrink:0;width:260px;height:80px;border-radius:10px;background:#121212;display:flex;align-items:center;gap:10px;padding:0 14px;box-sizing:border-box}
+.sp-mock-art{width:44px;height:44px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sp-mock-mid{flex:1;min-width:0}
+.sp-mock-title{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
+.sp-mock-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.15)}
+.sp-mock-fill{height:100%;width:35%;border-radius:2px;background:#1DB954}
+.sp-mock-play{width:30px;height:30px;border-radius:50%;background:#1DB954;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#000;padding-left:2px}
+.song-list{max-height:420px;overflow-y:auto;scrollbar-width:none}
+.song-list::-webkit-scrollbar{display:none}
+.mood-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.mood-love{background:rgba(240,171,202,0.14);color:var(--rose)}
+.mood-chill{background:rgba(134,224,212,0.14);color:var(--teal)}
+.mood-energy{background:rgba(232,213,163,0.14);color:var(--gold)}
+.mood-nostalgia{background:rgba(196,181,244,0.14);color:var(--lav)}
+.song-del{
+  width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.4);border:none;
+  color:var(--text-2);font-size:11px;cursor:pointer;display:none;
+  align-items:center;justify-content:center
+}
+.song-row:hover .song-del{display:flex}
+
+/* Spotify */
+.sp-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:#1DB954;border:none;color:#fff;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;flex-shrink:0;transition:opacity .15s;opacity:0}
+.song-row:hover .sp-btn{opacity:1}
+.sp-embed{margin-top:10px;border-radius:12px;overflow:hidden}
+.sp-embed iframe{display:block;border-radius:12px}
+.mood-tag{display:none}
+.sp-field-hint{font-size:11px;color:var(--text-2);margin-top:4px;line-height:1.4}
+
+/* memory notes */
+.notes-list{display:flex;flex-direction:column;gap:10px}
+.note-card{padding:16px;border-radius:14px;background:var(--glass-bg);border:1px solid var(--glass-border)}
+.note-card:hover .mem-edit-btn{opacity:1!important}
+.note-text{font-family:'Fraunces',serif;font-size:14px;font-weight:300;font-style:italic;
+  color:var(--text-1);line-height:1.65;margin-bottom:7px}
+.note-meta{font-size:11px;color:var(--text-2)}
+
+/* ===== LEDGER ===== */
+.ledger-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+
+.tabs{display:flex;gap:3px;padding:4px;background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:13px;margin-bottom:18px;width:fit-content}
+.tab{padding:8px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .2s;color:var(--text-2);border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif}
+.tab.active{background:rgba(196,181,244,0.18);color:var(--lav)}
+.tab:hover:not(.active){color:var(--text-1)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* lists */
+.lists-wrap{display:flex;flex-direction:column;gap:14px}
+.list-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:18px;padding:18px}
+.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.list-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--text-1)}
+.list-prog{font-size:11px;color:var(--text-2);font-weight:500}
+.list-items{display:flex;flex-direction:column;gap:2px}
+.li-row{
+  display:flex;align-items:center;gap:10px;padding:8px 4px;
+  border-bottom:1px solid var(--row-divider);cursor:pointer;transition:opacity .2s
+}
+.li-row:last-child{border-bottom:none}
+.li-row.done{opacity:.38}
+.li-row.done .li-text{text-decoration:line-through}
+.cb{
+  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--glass-border-strong);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s
+}
+.li-row.done .cb{background:rgba(196,181,244,0.35);border-color:var(--lav)}
+.cb-chk{opacity:0;transition:opacity .15s;color:var(--lav);font-size:11px;line-height:1}
+.li-row.done .cb-chk{opacity:1}
+.li-text{font-size:13px;color:var(--text-1);flex:1}
+.li-del{width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.4);border:none;
+  color:var(--text-2);font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.li-row:hover .li-del{display:flex}
+.li-edit{width:20px;height:20px;border-radius:50%;background:transparent;border:none;
+  color:var(--text-3);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.li-row:hover .li-edit{display:flex}
+.li-edit:hover{color:var(--lav)}
+.li-edit-input{flex:1;background:transparent;border:none;border-bottom:1.5px solid var(--lav);
+  font-size:13px;color:var(--text-1);outline:none;padding:1px 0;font-family:inherit}
+
+.add-row{display:flex;gap:8px;margin-top:12px}
+.gi{
+  flex:1;padding:9px 12px;border-radius:10px;border:1px solid var(--glass-border);
+  background:var(--input-bg);color:var(--text-1);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;transition:all .2s
+}
+.gi::placeholder{color:var(--text-3)}
+.gi:focus{border-color:rgba(114,80,196,.35);background:var(--input-bg-focus)}
+.gi option{background:var(--option-bg)}
+.btn-add{
+  padding:9px 14px;border-radius:10px;border:1px solid rgba(196,181,244,.25);
+  background:rgba(196,181,244,.12);color:var(--lav);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap
+}
+.btn-add:hover{background:rgba(196,181,244,.22)}
+
+/* expenses */
+.month-tabs-wrap{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
+.month-tabs-wrap::-webkit-scrollbar{display:none}
+.month-tab{flex-shrink:0;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;border:1.5px solid var(--glass-border-strong);background:transparent;color:var(--text-2);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.month-tab:hover{border-color:var(--lav);color:var(--lav)}
+.month-tab.active{background:rgba(114,80,196,.15);border-color:var(--lav);color:var(--lav)}
+.exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.exp-stat{padding:14px;border-radius:13px;background:var(--glass-bg);border:1px solid var(--glass-border);text-align:center}
+.exp-stat-v{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--text-1);margin-bottom:3px}
+.exp-stat-l{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text-2)}
+.exp-list{display:flex;flex-direction:column;gap:8px}
+.exp-row{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:13px;
+  background:var(--glass-bg);border:1px solid var(--glass-border)}
+.exp-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.exp-info{flex:1}
+.exp-name{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:2px}
+.exp-meta{font-size:11px;color:var(--text-2)}
+.exp-amt{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--text-1)}
+.exp-spl{font-size:10px;color:var(--text-2);text-align:right}
+.exp-del{width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.4);border:none;
+  color:var(--text-2);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.exp-row:hover .exp-del{display:flex}
+
+/* balance */
+.balance{
+  border-radius:20px;padding:22px;
+  background:var(--balance-bg);
+  border:1px solid var(--balance-border)
+}
+.bal-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:16px}
+.bal-amt{font-family:'Fraunces',serif;font-size:38px;font-weight:300;color:var(--text-1);margin-bottom:4px}
+.bal-desc{font-size:12px;color:var(--text-2);margin-bottom:18px}
+.bal-bar-wrap{height:7px;border-radius:4px;background:var(--bar-track);overflow:hidden;margin-bottom:7px}
+.bal-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--lav),var(--rose));transition:width .5s ease}
+.bal-names{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2)}
+
+/* modal */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
+  z-index:200;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s
+}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{
+  width:420px;max-width:92vw;max-height:90vh;overflow-y:auto;
+  background:var(--modal-bg);backdrop-filter:blur(32px);
+  border:1px solid var(--glass-border-strong);border-radius:22px;padding:26px;
+  transform:scale(.95) translateY(12px);transition:transform .22s
+}
+.modal-bg.open .modal{transform:scale(1) translateY(0)}
+.modal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--text-1);margin-bottom:18px}
+.mf{margin-bottom:13px}
+.ml{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
+.mi{
+  width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--glass-border);
+  background:var(--input-bg);color:var(--text-1);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;transition:all .2s
+}
+.mi:focus{border-color:rgba(114,80,196,.38);background:var(--input-bg-focus)}
+.mi::placeholder{color:var(--text-3)}
+.mi option{background:var(--option-bg)}
+.modal-btns{display:flex;gap:9px;margin-top:18px}
+.btn-cancel{
+  flex:1;padding:11px;border-radius:11px;border:1px solid var(--glass-border);
+  background:transparent;color:var(--text-2);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s
+}
+.btn-cancel:hover{background:var(--glass-bg);color:var(--text-1)}
+.btn-save{
+  flex:2;padding:11px;border-radius:11px;border:1px solid rgba(196,181,244,.35);
+  background:rgba(196,181,244,.18);color:var(--lav);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .2s
+}
+.btn-save:hover{background:rgba(196,181,244,.28)}
+.color-row{display:flex;gap:7px;flex-wrap:wrap}
+.c-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.c-opt.sel{border-color:#fff;transform:scale(1.18)}
+
+/* fab */
+.fab{
+  position:fixed;bottom:28px;right:28px;width:50px;height:50px;border-radius:15px;
+  background:rgba(196,181,244,.22);border:1px solid rgba(196,181,244,.38);
+  color:var(--lav);font-size:22px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;backdrop-filter:blur(12px);z-index:50
+}
+.fab:hover{background:rgba(196,181,244,.32);transform:scale(1.05)}
+
+/* ===== HOME DASHBOARD ===== */
+.home-greeting{margin-bottom:28px}
+.home-date{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
+.home-hi{font-family:'Fraunces',serif;font-size:38px;font-weight:400;color:var(--text-1);line-height:1.1}
+.home-hi em{font-style:italic;color:var(--lav)}
+
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.dash-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:18px;cursor:pointer;transition:all .2s}
+.dash-card:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong);transform:translateY(-2px)}
+.dash-card.wide{grid-column:span 2}
+.dash-card.tall{grid-row:span 2}
+.dc-icon{font-size:22px;margin-bottom:10px}
+.dc-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
+.dc-val{font-family:'Fraunces',serif;font-size:26px;font-weight:400;color:var(--text-1);line-height:1.1;margin-bottom:4px}
+.dc-sub{font-size:12px;color:var(--text-2);line-height:1.5}
+.dc-divider{height:1px;background:rgba(255,255,255,.06);margin:12px 0}
+.dc-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.dc-row:last-child{border-bottom:none}
+.dc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dc-row-text{font-size:12px;color:var(--text-1);flex:1;font-weight:500}
+.dc-row-sub{font-size:11px;color:var(--text-2)}
+.song-feat-card{
+  border-radius:16px;overflow:hidden;position:relative;
+  min-height:90px;display:flex;align-items:flex-end;padding:14px
+}
+.sfcbg{position:absolute;inset:0;background:linear-gradient(135deg,#6b2d8b,#2d6b8b);opacity:.6}
+.sfcfg{position:relative;z-index:1}
+.sfct{font-family:'Fraunces',serif;font-size:15px;font-weight:400;color:#fff;margin-bottom:1px}
+.sfca{font-size:11px;color:rgba(255,255,255,.6)}
+
+.balance-mini{margin-top:10px}
+.bm-bar-wrap{height:5px;border-radius:3px;background:var(--bar-track);overflow:hidden;margin:8px 0 6px}
+.bm-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--lav),var(--rose));transition:width .5s}
+.bm-names{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2)}
+
+@media(max-width:960px){.dash-grid{grid-template-columns:repeat(2,1fr)}.dash-card.wide{grid-column:span 2}}
+
+/* ===== TRAVEL ===== */
+.travel-layout{margin-top:20px}
+.travel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.travel-stats{display:flex;gap:20px;margin-bottom:18px}
+.tstat{text-align:center}
+.tstat-v{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--text-1)}
+.tstat-l{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2)}
+.tstat-div{width:1px;background:var(--glass-border);margin:0 4px}
+
+.trips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.trip-card{
+  border-radius:18px;overflow:hidden;border:1px solid var(--glass-border);
+  background:var(--glass-bg);cursor:pointer;transition:all .22s;position:relative
+}
+.trip-card:hover{transform:translateY(-3px);border-color:var(--glass-border-strong);background:var(--glass-bg-hover)}
+.trip-hero{
+  height:96px;display:flex;align-items:center;justify-content:center;
+  font-size:38px;position:relative;overflow:hidden
+}
+.trip-hero-bg{position:absolute;inset:0;opacity:.55}
+.trip-hero-emoji{position:relative;z-index:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,.2))}
+.trip-body{padding:14px 16px 16px}
+.trip-name{font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--text-1);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trip-dates{font-size:11px;color:var(--text-2);margin-bottom:10px}
+.trip-foot{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.trip-status{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.s-planning{background:rgba(114,80,196,.12);color:var(--lav)}
+.s-booked{background:rgba(32,128,112,.12);color:var(--teal)}
+.s-ongoing{background:rgba(154,108,18,.12);color:var(--gold)}
+.s-completed{background:rgba(120,120,140,.10);color:var(--text-2)}
+.trip-who{font-size:10px;font-weight:700;color:var(--text-2)}
+.trip-del-btn{
+  position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;
+  background:rgba(0,0,0,.28);border:none;color:rgba(255,255,255,.8);font-size:12px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2
+}
+.trip-card:hover .trip-del-btn{display:flex}
+.trip-add-card{
+  border-radius:18px;border:1.5px dashed var(--glass-border);min-height:180px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;color:var(--text-2);transition:all .2s;background:transparent
+}
+.trip-add-card:hover{color:var(--text-1);border-color:var(--glass-border-strong);background:var(--glass-bg)}
+.trip-add-icon{font-size:28px}
+.trip-add-label{font-size:12px;font-weight:600}
+
+/* countdown chip */
+.countdown-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;
+  background:rgba(114,80,196,.1);border:1px solid rgba(114,80,196,.18);
+  font-size:12px;font-weight:600;color:var(--lav)
+}
+
+/* packing list in modal */
+.pack-item{
+  display:flex;align-items:center;gap:10px;padding:7px 4px;
+  border-bottom:1px solid var(--row-divider);cursor:pointer
+}
+.pack-item:last-child{border-bottom:none}
+.pack-item.packed{opacity:.4}
+.pack-item.packed .pack-text{text-decoration:line-through}
+.pack-text{font-size:13px;color:var(--text-1);flex:1}
+.pack-del{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.1);
+  border:none;color:var(--text-2);font-size:10px;cursor:pointer;display:none;
+  align-items:center;justify-content:center;flex-shrink:0}
+.pack-item:hover .pack-del{display:flex}
+.trip-detail-hero{
+  border-radius:14px;overflow:hidden;position:relative;height:80px;
+  display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:16px
+}
+.tdh-bg{position:absolute;inset:0;opacity:.6}
+
+@media(max-width:640px){.trips-grid{grid-template-columns:1fr 1fr}}
+
+/* ── MODAL WIDE (trip detail) ── */
+.modal.wide{width:min(92vw,700px)}
+
+/* ── MODAL TABS ── */
+.m-tabs{display:flex;gap:2px;padding:3px;background:var(--input-bg);border-radius:11px;margin-bottom:18px}
+.m-tab{flex:1;padding:7px 4px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;text-align:center;cursor:pointer;color:var(--text-2);transition:all .15s;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif}
+.m-tab.active{background:rgba(114,80,196,.18);color:var(--lav)}
+.m-tab-content{display:none}
+.m-tab-content.active{display:block}
+
+/* ── TYPEAHEAD ── */
+.typeahead-wrap{position:relative}
+.ta-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--modal-bg);border:1px solid var(--glass-border-strong);border-radius:12px;overflow:hidden;z-index:400;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none}
+.ta-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--row-divider);transition:background .1s}
+.ta-item:last-child{border-bottom:none}
+.ta-item:hover{background:var(--glass-bg-hover)}
+.ta-main{font-size:13px;font-weight:600;color:var(--text-1)}
+.ta-sub{font-size:11px;color:var(--text-2);margin-top:1px}
+
+/* ── TRIP DETAIL HERO ── */
+.td-hero{border-radius:14px;overflow:hidden;position:relative;height:72px;display:flex;align-items:center;padding:0 20px;margin-bottom:16px}
+.td-hero-bg{position:absolute;inset:0}
+.td-hero-dest{position:relative;z-index:1;font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:#fff}
+.td-hero-name{position:relative;z-index:1;font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
+
+/* ── ITINERARY ── */
+.itin-day{margin-bottom:18px}
+.itin-day-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.itin-day-label{font-family:'Fraunces',serif;font-size:14px;font-weight:400;color:var(--text-1)}
+.itin-day-date{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-2)}
+.itin-items{display:flex;flex-direction:column;gap:4px}
+.itin-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);transition:all .15s}
+.itin-item:hover{background:var(--glass-bg-hover)}
+.itin-time{font-size:11px;font-weight:700;color:var(--text-2);min-width:36px;padding-top:1px}
+.itin-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.itin-info{flex:1}
+.itin-title{font-size:13px;font-weight:600;color:var(--text-1)}
+.itin-note{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4}
+.itin-del{width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.08);border:none;color:var(--text-2);font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.itin-item:hover .itin-del{display:flex}
+.itin-edit-btn{width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-3);font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.itin-item:hover .itin-edit-btn{display:flex}
+.itin-edit-btn:hover{color:var(--lav)}
+.itin-quick-add{display:grid;grid-template-columns:54px 1fr;gap:6px;margin-top:8px}
+.itin-empty{color:var(--text-3);font-size:12px;padding:8px 0}
+
+/* ── LP DISCOVER ── */
+.lp-rec-item{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);margin-bottom:6px}
+.lp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.lp-title{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:3px}
+.lp-desc{font-size:12px;color:var(--text-2);line-height:1.5}
+.lp-cat{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:2px}
+.lp-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);font-size:12px;font-weight:600;color:var(--lav);text-decoration:none;transition:all .2s}
+.disc-add-btn{font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;border:1.5px solid var(--lav);color:var(--lav);background:transparent;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.disc-add-btn:hover:not(:disabled){background:rgba(114,80,196,.12)}
+.lp-link:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong)}
+
+/* ── RECURRING EXPENSES ── */
+/* income */
+.income-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--row-divider)}
+.income-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:13px;background:var(--glass-bg);border:1px solid var(--glass-border);margin-bottom:6px}
+.income-row:hover .income-del{display:flex}
+.income-del{width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.08);border:none;color:var(--text-2);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.income-amt{font-size:15px;font-weight:700;color:var(--teal)}
+/* budget widget rows */
+.bud-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.bud-lbl{font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.8px}
+.bud-val{font-size:16px;font-weight:700;font-family:'Fraunces',serif}
+.bud-net{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 4px}
+.bud-net-lbl{font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.8px}
+.bud-net-val{font-family:'Fraunces',serif;font-size:28px;font-weight:300}
+.recur-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--row-divider)}
+.recur-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.recur-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:13px;background:var(--glass-bg);border:1px solid var(--glass-border)}
+.recur-freq{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:3px 8px;border-radius:20px}
+.freq-weekly{background:rgba(32,128,112,.12);color:var(--teal)}
+.freq-monthly{background:rgba(114,80,196,.12);color:var(--lav)}
+.freq-yearly{background:rgba(154,108,18,.12);color:var(--gold)}
+.recur-del{width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.08);border:none;color:var(--text-2);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.recur-row:hover .recur-del{display:flex}
+.recur-log-btn{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;border:1.5px solid var(--lav);color:var(--lav);background:transparent;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.recur-log-btn:hover{background:rgba(114,80,196,.10)}
+.recur-paid-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(32,128,112,.12);color:var(--teal);white-space:nowrap;flex-shrink:0}
+.recur-total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 14px;border-radius:10px;background:var(--input-bg)}
+.recur-total-label{font-size:11px;color:var(--text-2);font-weight:600}
+.recur-total-val{font-family:'Fraunces',serif;font-size:18px;color:var(--text-1)}
+@media(max-width:640px){.dash-grid{grid-template-columns:1fr}.dash-card.wide,.dash-card.tall{grid-column:span 1;grid-row:span 1}.home-hi{font-size:28px}}
+
+/* bottom nav mobile */
+.bnav{display:none}
+
+/* responsive */
+@media(max-width:960px){
+  .sight-layout,.sound-layout,.ledger-layout{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .sidebar{display:none}
+  .main{padding:18px 14px 80px}
+  .bnav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;
+    background:var(--bnav-bg);backdrop-filter:blur(22px);
+    border-top:1px solid var(--bnav-border);z-index:20;
+    align-items:center;justify-content:space-around;padding:0 10px
+  }
+  .bn{
+    display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+    color:var(--text-2);padding:6px 14px;border-radius:11px;transition:all .2s;
+    font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase
+  }
+  .bn.active{color:var(--lav)}
+  .bn svg{width:20px;height:20px;stroke-width:1.6}
+  .fab{bottom:72px;right:16px}
+  .exp-stats{grid-template-columns:repeat(3,1fr)}
+  .ph-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">A&amp;V<em>together</em></div>
+    <nav class="nav">
+      <button class="nav-btn active" data-panel="home" onclick="switchPanel('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-tip">Home</span>
+      </button>
+      <button class="nav-btn" data-panel="sight" onclick="switchPanel('sight')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="nav-tip">Sight</span>
+      </button>
+      <button class="nav-btn" data-panel="sound" onclick="switchPanel('sound')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <span class="nav-tip">Sound</span>
+      </button>
+      <button class="nav-btn" data-panel="ledger" onclick="switchPanel('ledger')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="nav-tip">Ledger</span>
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <button class="nav-btn" id="theme-btn" onclick="toggleTheme()">
+        <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="nav-tip" id="theme-tip">Dark mode</span>
+      </button>
+      <button class="nav-btn" onclick="openSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="nav-tip">Settings</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- HOME DASHBOARD -->
+    <section class="panel active" id="panel-home">
+      <div class="home-greeting">
+        <div class="home-date" id="home-date"></div>
+        <div class="home-hi" id="home-hi">Good morning, <em>Victoria</em></div>
+      </div>
+
+      <div class="dash-grid">
+        <!-- Upcoming events -->
+        <div class="dash-card tall" onclick="switchPanel('sight')">
+          <div class="dc-label">&#128197; Upcoming</div>
+          <div id="dash-events"><div style="color:var(--text-3);font-size:12px;padding:8px 0">No events yet</div></div>
+        </div>
+
+        <!-- Song of the moment -->
+        <div class="dash-card" onclick="switchPanel('sound')">
+          <div class="dc-label">&#9835; Now Playing</div>
+          <div id="dash-song">
+            <div style="color:var(--text-3);font-size:12px;padding:8px 0">No songs yet</div>
+          </div>
+        </div>
+
+        <!-- Balance -->
+        <div class="dash-card" onclick="switchPanel('ledger')">
+          <div class="dc-label">&#128176; Budget</div>
+          <div class="dc-val" id="dash-bal-amt">$0.00</div>
+          <div class="dc-sub" id="dash-bal-desc">this month</div>
+          <div class="balance-mini" style="margin-top:8px">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:4px">
+              <span>In <span id="dash-inc-amt" style="color:var(--teal);font-weight:700">$0</span></span>
+              <span>Out <span id="dash-exp-amt" style="color:var(--rose);font-weight:700">$0</span></span>
+            </div>
+            <div class="bm-bar-wrap"><div class="bm-bar" id="dash-bal-bar" style="width:0%;background:var(--teal)"></div></div>
+          </div>
+        </div>
+
+        <!-- Lists -->
+        <div class="dash-card wide" onclick="switchPanel('ledger')">
+          <div class="dc-label">&#9989; Lists</div>
+          <div id="dash-lists"><div style="color:var(--text-3);font-size:12px;padding:8px 0">No lists yet</div></div>
+        </div>
+
+        <!-- Vault -->
+        <div class="dash-card" onclick="switchPanel('sight')">
+          <div class="dc-label">&#128193; Vault</div>
+          <div class="dc-val" id="dash-vault-count">0</div>
+          <div class="dc-sub">documents stored</div>
+          <div class="dc-divider"></div>
+          <div id="dash-vault-items" style="display:flex;flex-direction:column;gap:4px"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SIGHT PANEL -->
+    <section class="panel" id="panel-sight">
+      <div class="ph">
+        <div class="ph-eye">Sight</div>
+        <div class="ph-title">Our Calendar</div>
+      </div>
+
+      <div class="sight-layout">
+        <!-- Calendar -->
+        <div class="gc">
+          <div class="cal-head">
+            <button class="cal-nav" onclick="calNav(-1)">&#8592;</button>
+            <div class="cal-month" id="cal-month"></div>
+            <button class="cal-nav" onclick="calNav(1)">&#8594;</button>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <!-- Right: upcoming + legend -->
+        <div>
+          <div class="gc-sm" style="margin-bottom:14px">
+            <div class="slabel">Who's who</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="dot dot-a" style="width:10px;height:10px;border-radius:50%"></div>
+                <span id="name-a-display" style="font-size:13px;font-weight:600;color:var(--lav)">Victoria</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="dot dot-b" style="width:10px;height:10px;border-radius:50%"></div>
+                <span id="name-b-display" style="font-size:13px;font-weight:600;color:var(--rose)" id="name-b-d">Partner</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="dot dot-s" style="width:10px;height:10px;border-radius:50%"></div>
+                <span style="font-size:13px;font-weight:600;color:var(--gold)">Together</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gc-sm">
+            <div class="slabel">Upcoming</div>
+            <div class="ev-list" id="ev-list">
+              <div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">No events yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Vault -->
+      <div class="vault-layout">
+        <div class="gc">
+          <div class="slabel">Document &amp; Ticket Vault</div>
+          <div class="vault-grid" id="vault-grid">
+            <div class="vc add" onclick="openModal('vault')">
+              <div class="vc-icon">+</div>
+              <div class="vc-name" style="color:inherit">Add Document</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Travel Planner -->
+      <div class="travel-layout">
+        <div class="gc">
+          <div class="travel-head">
+            <div>
+              <div class="slabel" style="margin-bottom:4px">Travel Planner</div>
+              <div id="travel-countdown"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <div class="travel-stats">
+                <div class="tstat"><div class="tstat-v" id="trip-count-total">0</div><div class="tstat-l">Trips</div></div>
+                <div class="tstat-div"></div>
+                <div class="tstat"><div class="tstat-v" id="trip-count-upcoming">0</div><div class="tstat-l">Upcoming</div></div>
+              </div>
+              <button class="btn-add" onclick="openModal('trip')">+ Add Trip</button>
+            </div>
+          </div>
+          <div class="trips-grid" id="trips-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOUND PANEL -->
+    <section class="panel" id="panel-sound">
+      <div class="ph">
+        <div class="ph-eye">Sound</div>
+        <div class="ph-title">Our Soundtrack</div>
+      </div>
+
+      <div class="sound-layout">
+        <div>
+          <!-- Featured -->
+          <div class="featured" id="featured-song">
+            <div class="featured-bg" id="feat-bg"></div>
+            <div class="featured-fg">
+              <div class="feat-label">&#9835; Song of the Moment</div>
+              <div class="feat-title" id="feat-title">Add your first song</div>
+              <div class="feat-artist" id="feat-artist">Press + to begin your soundtrack</div>
+              <div class="feat-note" id="feat-note"></div>
+              <div id="feat-sp-btn"></div>
+            </div>
+          </div>
+          <div id="feat-sp-embed"></div>
+
+          <!-- Playlist -->
+          <div class="gc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div class="slabel" style="margin-bottom:0">Our Playlist</div>
+              <button class="btn-add" onclick="openModal('song')">+ Add Song</button>
+            </div>
+            <div class="song-list" id="song-list">
+              <div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">Your shared playlist is empty</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Memory notes -->
+        <div class="gc">
+          <div class="slabel">Musical Memories</div>
+          <div class="notes-list" id="notes-list">
+            <div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">Add a memory tied to music</div>
+          </div>
+          <button class="btn-add" style="width:100%;margin-top:14px;padding:11px" onclick="openModal('memory')">+ Add Memory</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEDGER PANEL -->
+    <section class="panel" id="panel-ledger">
+      <div class="ph">
+        <div class="ph-eye">Ledger</div>
+        <div class="ph-title">Shared Life</div>
+      </div>
+
+      <div class="ledger-layout">
+        <div>
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('lists')">Lists</button>
+            <button class="tab" onclick="switchTab('expenses')">Finances</button>
+          </div>
+
+          <!-- Lists tab -->
+          <div class="tab-content active" id="tab-lists">
+            <div class="lists-wrap" id="lists-wrap"></div>
+            <button class="btn-add" style="margin-top:14px;padding:10px 18px" onclick="openModal('newlist')">+ New List</button>
+          </div>
+
+          <!-- Expenses tab -->
+          <div class="tab-content" id="tab-expenses">
+            <div class="month-tabs-wrap" id="month-tabs"></div>
+            <div class="exp-stats" id="exp-stats"></div>
+            <div class="exp-list" id="exp-list"></div>
+            <div class="income-section">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <div class="slabel" style="margin-bottom:0">Income</div>
+                <button class="btn-add" style="padding:5px 12px;font-size:10px" onclick="openModal('income')">+ Add</button>
+              </div>
+              <div id="income-list"></div>
+              <div class="recur-total" style="margin-top:8px">
+                <span class="recur-total-label">Total this month</span>
+                <span class="recur-total-val" id="income-monthly-total" style="color:var(--teal)">$0.00</span>
+              </div>
+            </div>
+            <div class="recur-section">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="slabel" style="margin-bottom:0">Recurring Expenses</div>
+                <button class="btn-add" style="padding:5px 12px;font-size:10px" onclick="openModal('recurring')">+ Add</button>
+              </div>
+              <div class="recur-list" id="recur-list"></div>
+              <div class="recur-total" style="margin-top:10px">
+                <span class="recur-total-label">Monthly committed</span>
+                <span class="recur-total-val" id="recur-monthly-total">$0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance widget -->
+        <div class="balance" id="balance-widget">
+          <div class="bal-label" id="bal-month-label">This Month</div>
+          <div class="bud-row">
+            <span class="bud-lbl">Income</span>
+            <span class="bud-val" id="bal-income" style="color:var(--teal)">$0.00</span>
+          </div>
+          <div class="bud-row">
+            <span class="bud-lbl">Expenses</span>
+            <span class="bud-val" id="bal-expenses" style="color:var(--rose)">$0.00</span>
+          </div>
+          <div class="bud-net">
+            <span class="bud-net-lbl">Net</span>
+            <span class="bud-net-val" id="bal-net">$0.00</span>
+          </div>
+          <div class="bal-desc" id="bal-desc" style="font-size:11px;margin-bottom:12px"></div>
+          <div class="bal-bar-wrap"><div class="bal-bar" id="bal-bar" style="width:0%"></div></div>
+          <div class="bal-names" style="margin-bottom:0">
+            <span id="bal-pct-spent" style="font-size:10px;color:var(--text-2)">0% spent</span>
+            <span id="bal-pct-label" style="font-size:10px;color:var(--text-2)"></span>
+          </div>
+
+          <div style="margin-top:22px;border-top:1px solid rgba(255,255,255,.07);padding-top:18px">
+            <div class="slabel" style="margin-bottom:10px">Category Breakdown</div>
+            <div id="cat-breakdown" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Mobile Bottom Nav -->
+<nav class="bnav">
+  <div class="bn active" data-panel="home" onclick="switchPanel('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </div>
+  <div class="bn" data-panel="sight" onclick="switchPanel('sight')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Sight
+  </div>
+  <div class="bn" data-panel="sound" onclick="switchPanel('sound')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    Sound
+  </div>
+  <div class="bn" data-panel="ledger" onclick="switchPanel('ledger')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Ledger
+  </div>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="fab" onclick="fabClick()">+</button>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-title" id="modal-title">Add Event</div>
+    <div id="modal-body"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="modal-cancel" onclick="closeModalCancel()">Cancel</button>
+      <button class="btn-save" id="modal-save" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const STORE_KEY = 'sight-sound-v2';
+let state = {
+  names: { a: 'Victoria', b: 'Alan' },
+  events: [],
+  vault: [],
+  songs: [],
+  memories: [],
+  lists: [
+    { id: uid(), name: 'Groceries', items: [] },
+    { id: uid(), name: 'Wishlist', items: [] }
+  ],
+  expenses: [],
+  trips: [],
+  recurring: [],
+  income: []
+};
+
+function uid() { return Math.random().toString(36).slice(2,10); }
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORE_KEY);
+    if (s) {
+      state = JSON.parse(s);
+      // migrate default partner name
+      if (state.names.b === 'Partner') state.names.b = 'Alan';
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function initTheme() {
+  const saved = localStorage.getItem('ss-theme') || 'light';
+  applyTheme(saved);
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('ss-theme', theme);
+  const isDark = theme === 'dark';
+  const sunEl = document.getElementById('theme-icon-sun');
+  const moonEl = document.getElementById('theme-icon-moon');
+  const tipEl = document.getElementById('theme-tip');
+  if (sunEl) sunEl.style.display = isDark ? 'block' : 'none';
+  if (moonEl) moonEl.style.display = isDark ? 'none' : 'block';
+  if (tipEl) tipEl.textContent = isDark ? 'Light mode' : 'Dark mode';
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  applyTheme(isDark ? 'light' : 'dark');
+}
+
+// ============================================================
+// PANEL SWITCHING
+// ============================================================
+let currentPanel = 'home';
+
+function switchPanel(name) {
+  currentPanel = name;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-panel]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bn[data-panel]').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('[data-panel="' + name + '"]').forEach(b => b.classList.add('active'));
+  renderAll();
+}
+
+// ============================================================
+// HOME DASHBOARD
+// ============================================================
+function renderHome() {
+  // Greeting
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const dateEl = document.getElementById('home-date');
+  const hiEl = document.getElementById('home-hi');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  if (hiEl) hiEl.innerHTML = greeting + ', <em>' + esc(state.names.a) + ' & ' + esc(state.names.b) + '</em>';
+
+  // Upcoming events
+  const evEl = document.getElementById('dash-events');
+  if (evEl) {
+    const today = new Date(now.toDateString());
+    const upcoming = state.events
+      .filter(e => new Date(e.date + 'T00:00:00') >= today)
+      .sort((a,b) => a.date.localeCompare(b.date))
+      .slice(0, 5);
+    if (!upcoming.length) {
+      evEl.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:8px 0">No upcoming events — <span style="color:var(--lav);cursor:pointer" onclick="switchPanel(\'sight\')">add one</span></div>';
+    } else {
+      evEl.innerHTML = upcoming.map(e => {
+        const d = new Date(e.date + 'T00:00:00');
+        const isToday = d.toDateString() === now.toDateString();
+        const isTomorrow = d.toDateString() === new Date(now.getTime()+86400000).toDateString();
+        const label = isToday ? 'Today' : isTomorrow ? 'Tomorrow' : d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+        return `<div class="dc-row">
+          <div class="dc-dot" style="background:${e.color}"></div>
+          <div class="dc-row-text">${esc(e.name)}</div>
+          <div class="dc-row-sub">${label}</div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Song
+  const songEl = document.getElementById('dash-song');
+  if (songEl) {
+    const feat = state.songs.find(s => s.featured) || state.songs[0];
+    if (!feat) {
+      songEl.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:8px 0">Add your first song</div>';
+    } else {
+      const bg = { love:'linear-gradient(135deg,#8b2d6b,#6b2d8b)', chill:'linear-gradient(135deg,#2d6b8b,#2d8b7a)', energy:'linear-gradient(135deg,#8b6b2d,#8b3a2d)', nostalgia:'linear-gradient(135deg,#4a2d8b,#2d4a8b)' };
+      songEl.innerHTML = `<div class="song-feat-card">
+        <div class="sfcbg" style="background:${bg[feat.mood]||bg.chill}"></div>
+        <div class="sfcfg"><div class="sfct">${esc(feat.title)}</div><div class="sfca">${esc(feat.artist)}</div></div>
+      </div>`;
+    }
+  }
+
+  // Budget — this month income vs expenses
+  const moExp = thisMonthExpenses();
+  const moInc = thisMonthIncome();
+  const totalExp = moExp.reduce((s,e) => s + e.amount, 0);
+  const totalInc = moInc.reduce((s,i) => s + i.amount, 0);
+  const net = totalInc - totalExp;
+  const dbAmt = document.getElementById('dash-bal-amt');
+  const dbDesc = document.getElementById('dash-bal-desc');
+  const dbBar = document.getElementById('dash-bal-bar');
+  if (dbAmt) {
+    const sign = net > 0 ? '+' : '';
+    dbAmt.textContent = sign + '$' + fmt(Math.abs(net));
+    dbAmt.style.color = net >= 0 ? 'var(--teal)' : 'var(--rose)';
+    dbDesc.textContent = !totalInc && !totalExp ? 'nothing tracked' : net > 0 ? 'surplus' : net < 0 ? 'deficit' : 'on track';
+    const pct = totalInc > 0 ? Math.min(Math.round(totalExp/totalInc*100), 100) : (totalExp > 0 ? 100 : 0);
+    if (dbBar) { dbBar.style.width = pct + '%'; dbBar.style.background = pct >= 100 ? 'var(--rose)' : pct >= 80 ? 'var(--gold)' : 'var(--teal)'; }
+    const incEl = document.getElementById('dash-inc-amt');
+    const expEl = document.getElementById('dash-exp-amt');
+    if (incEl) incEl.textContent = '$' + fmt(totalInc);
+    if (expEl) expEl.textContent = '$' + fmt(totalExp);
+  }
+
+  // Lists summary
+  const listsEl = document.getElementById('dash-lists');
+  if (listsEl) {
+    if (!state.lists.length) {
+      listsEl.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:8px 0">No lists yet</div>';
+    } else {
+      listsEl.innerHTML = state.lists.map(l => {
+        const done = l.items.filter(i => i.done).length;
+        const total = l.items.length;
+        const pct = total ? Math.round(done/total*100) : 0;
+        return `<div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:12px;font-weight:600;color:var(--text-1)">${esc(l.name)}</span>
+            <span style="font-size:11px;color:var(--text-2)">${done}/${total}</span>
+          </div>
+          <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.08)">
+            <div style="height:100%;width:${pct}%;border-radius:2px;background:var(--lav);transition:width .4s"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Vault
+  const vaultCount = document.getElementById('dash-vault-count');
+  const vaultItems = document.getElementById('dash-vault-items');
+  if (vaultCount) {
+    vaultCount.textContent = state.vault.length;
+    vaultItems.innerHTML = state.vault.slice(0, 3).map(v => `
+      <div class="dc-row">
+        <span style="font-size:13px">${VAULT_ICONS[v.type]||'📎'}</span>
+        <div class="dc-row-text">${esc(v.name)}</div>
+        <div class="dc-row-sub">${v.type}</div>
+      </div>
+    `).join('') || '<div style="color:var(--text-3);font-size:12px;padding:4px 0">Empty vault</div>';
+  }
+
+}
+
+// ============================================================
+// CALENDAR
+// ============================================================
+let calYear, calMonth;
+
+function initCal() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function renderCalendar() {
+  const el = document.getElementById('cal-month');
+  if (el) el.textContent = MONTHS[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  DAYS.forEach(d => {
+    const lbl = document.createElement('div');
+    lbl.className = 'cal-dl';
+    lbl.textContent = d;
+    grid.appendChild(lbl);
+  });
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other';
+    const n = document.createElement('div'); n.className = 'day-n'; n.textContent = prevDays - firstDay + 1 + i;
+    d.appendChild(n);
+    grid.appendChild(d);
+  }
+
+  for (let i = 1; i <= daysInMonth; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day';
+    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === i;
+    if (isToday) d.classList.add('today');
+
+    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(i).padStart(2,'0');
+    const dayEvs = state.events.filter(e => e.date === dateStr);
+
+    const n = document.createElement('div'); n.className = 'day-n'; n.textContent = i;
+    d.appendChild(n);
+
+    if (dayEvs.length) {
+      const dots = document.createElement('div'); dots.className = 'dots';
+      dayEvs.slice(0,3).forEach(e => {
+        const dot = document.createElement('div');
+        dot.className = 'dot dot-' + e.who;
+        dots.appendChild(dot);
+      });
+      d.appendChild(dots);
+    }
+
+    // Trip spans
+    const dayTrips = (state.trips || []).filter(t =>
+      t.startDate && t.endDate && dateStr >= t.startDate && dateStr <= t.endDate
+    );
+    dayTrips.forEach(t => {
+      const stop = (t.stops || []).find(s => s.startDate && s.endDate && dateStr >= s.startDate && dateStr <= s.endDate);
+      const label = stop ? stop.destination : (t.name || t.destination);
+      const isFirst = dateStr === (stop ? stop.startDate : t.startDate);
+      const chip = document.createElement('div');
+      chip.className = 'trip-chip';
+      chip.style.background = TRIP_GRADIENTS[t.status] || TRIP_GRADIENTS.planning;
+      chip.title = label;
+      chip.textContent = (isFirst ? '✈ ' : '') + label;
+      chip.addEventListener('click', e => { e.stopPropagation(); openModal('tripdetail', t.id); });
+      d.appendChild(chip);
+    });
+
+    d.addEventListener('click', () => openModal('event', { date: dateStr }));
+    grid.appendChild(d);
+  }
+
+  const remaining = 42 - firstDay - daysInMonth;
+  for (let i = 1; i <= remaining; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other';
+    const n = document.createElement('div'); n.className = 'day-n'; n.textContent = i;
+    d.appendChild(n);
+    grid.appendChild(d);
+  }
+
+  renderEvents();
+}
+
+function renderEvents() {
+  const el = document.getElementById('ev-list');
+  if (!el) return;
+  const now = new Date();
+  const upcoming = state.events
+    .filter(e => new Date(e.date + 'T00:00:00') >= new Date(now.toDateString()))
+    .sort((a,b) => a.date.localeCompare(b.date))
+    .slice(0, 6);
+
+  if (!upcoming.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">No upcoming events</div>';
+    return;
+  }
+
+  el.innerHTML = upcoming.map(e => {
+    const d = new Date(e.date + 'T00:00:00');
+    const label = d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const whoLabel = e.who === 'a' ? state.names.a : e.who === 'b' ? state.names.b : 'Together';
+    const whoClass = 'who-' + e.who;
+    return `<div class="ev-card">
+      <div class="ev-bar" style="background:${e.color}"></div>
+      <div class="ev-info">
+        <div class="ev-name">${esc(e.name)}</div>
+        <div class="ev-date">${label}${e.time ? ' · ' + e.time : ''}</div>
+      </div>
+      <div class="ev-who ${whoClass}">${esc(whoLabel)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// VAULT
+// ============================================================
+const VAULT_ICONS = { pdf:'📄', qr:'📱', ticket:'🎟️', hotel:'🏨', flight:'✈️', car:'🚗', event:'🎭', other:'📎' };
+const VAULT_COLORS = { pdf:'#e87a7a', qr:'#7ab0e8', ticket:'#e8d57a', hotel:'#7ae8c8', flight:'#a87ae8', car:'#e8a87a', event:'#e87ab0', other:'#a0a0b0' };
+
+function renderVault() {
+  const grid = document.getElementById('vault-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  state.vault.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vc';
+    const color = VAULT_COLORS[v.type] || VAULT_COLORS.other;
+    card.innerHTML = `
+      <div class="vc-glow" style="background:${color}"></div>
+      <div class="vc-icon">${VAULT_ICONS[v.type] || '📎'}</div>
+      <div class="vc-name">${esc(v.name)}</div>
+      <div class="vc-type">${v.type}</div>
+      <button class="vc-del" onclick="deleteVault('${v.id}',event)">✕</button>
+    `;
+    grid.appendChild(card);
+  });
+
+  const add = document.createElement('div');
+  add.className = 'vc add';
+  add.onclick = () => openModal('vault');
+  add.innerHTML = '<div class="vc-icon">+</div><div class="vc-name" style="color:inherit">Add Document</div>';
+  grid.appendChild(add);
+}
+
+function deleteVault(id, e) {
+  e.stopPropagation();
+  state.vault = state.vault.filter(v => v.id !== id);
+  saveState(); renderVault();
+}
+
+// ============================================================
+// SOUND
+// ============================================================
+const MOOD_COLORS = {
+  love: 'linear-gradient(135deg,#8b2d6b,#6b2d8b)',
+  chill: 'linear-gradient(135deg,#2d6b8b,#2d8b7a)',
+  energy: 'linear-gradient(135deg,#8b6b2d,#8b3a2d)',
+  nostalgia: 'linear-gradient(135deg,#4a2d8b,#2d4a8b)'
+};
+const MOOD_EMOJIS = { love:'♥', chill:'🌙', energy:'⚡', nostalgia:'✦' };
+
+// ── Spotify helpers ────────────────────────────────────────
+function parseSpotify(url) {
+  if (!url) return null;
+  const uri = url.match(/spotify:(track|album|playlist|artist):([A-Za-z0-9]+)/);
+  if (uri) return { type: uri[1], id: uri[2] };
+  const link = url.match(/open\.spotify\.com\/(track|album|playlist|artist)\/([A-Za-z0-9]+)/);
+  if (link) return { type: link[1], id: link[2] };
+  return null;
+}
+
+function spEmbedHtml(spotifyUrl, height = 80) {
+  const p = parseSpotify(spotifyUrl);
+  if (!p) return '';
+  const src = `https://open.spotify.com/embed/${p.type}/${p.id}?utm_source=generator`;
+  return `<div class="sp-embed"><iframe src="${src}" width="100%" height="${height}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>`;
+}
+
+function spOpenUrl(spotifyUrl) {
+  const p = parseSpotify(spotifyUrl);
+  return p ? `https://open.spotify.com/${p.type}/${p.id}` : null;
+}
+
+function previewSpotify(url, previewElId) {
+  const el = document.getElementById(previewElId);
+  if (!el) return;
+  el.innerHTML = url && parseSpotify(url) ? spEmbedHtml(url, 80) : '';
+}
+
+async function fetchSpotifyMeta(url) {
+  const statusEl = document.getElementById('sp-meta-status');
+  if (!url || !parseSpotify(url)) return;
+  if (statusEl) statusEl.textContent = 'Looking up track…';
+  try {
+    const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const titleEl  = document.getElementById('m-title');
+    const artistEl = document.getElementById('m-artist');
+    if (titleEl && !titleEl.value)  titleEl.value  = data.title      || '';
+    if (artistEl && !artistEl.value) artistEl.value = data.author_name || '';
+    if (statusEl) statusEl.textContent = data.title ? `Found: ${data.title}` : 'Paste a link to auto-fill title & artist';
+  } catch {
+    if (statusEl) statusEl.textContent = 'Could not fetch track info — fill in manually';
+  }
+}
+
+function renderSound() {
+  renderFeatured();
+  renderPlaylist();
+  renderMemories();
+}
+
+function renderFeatured() {
+  const title = document.getElementById('feat-title');
+  const artist = document.getElementById('feat-artist');
+  const note = document.getElementById('feat-note');
+  const bg = document.getElementById('feat-bg');
+  const spBtn = document.getElementById('feat-sp-btn');
+  const spEmbed = document.getElementById('feat-sp-embed');
+  if (!title) return;
+
+  const featured = state.songs.find(s => s.featured) || state.songs[0];
+  if (!featured) {
+    title.textContent = 'Add your first song';
+    artist.textContent = 'Press + to begin your soundtrack';
+    note.textContent = '';
+    if (spBtn) spBtn.innerHTML = '';
+    if (spEmbed) spEmbed.innerHTML = '';
+    return;
+  }
+
+  title.textContent = featured.title;
+  artist.textContent = featured.artist;
+  note.textContent = featured.note || '';
+  bg.style.background = MOOD_COLORS[featured.mood] || MOOD_COLORS.chill;
+
+  if (spBtn) {
+    const openUrl = featured.spotifyUrl ? spOpenUrl(featured.spotifyUrl) : null;
+    spBtn.innerHTML = openUrl
+      ? `<a href="${openUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 14px;border-radius:20px;background:#1DB954;color:#fff;font-size:12px;font-weight:700;text-decoration:none">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+           Play on Spotify
+         </a>`
+      : '';
+  }
+
+  if (spEmbed) {
+    spEmbed.innerHTML = '';
+  }
+}
+
+function renderPlaylist() {
+  const el = document.getElementById('song-list');
+  if (!el) return;
+  if (!state.songs.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">Your shared playlist is empty</div>';
+    return;
+  }
+  el.innerHTML = state.songs.map((s, i) => {
+    const p = s.spotifyUrl ? parseSpotify(s.spotifyUrl) : null;
+    const embedSrc = p ? `https://open.spotify.com/embed/${p.type}/${p.id}?utm_source=generator` : null;
+    return `
+    <div class="song-entry">
+      <div class="song-row${s.featured ? ' is-featured' : ''}" onclick="setFeatured('${s.id}')" title="Set as Song of the Moment">
+        <div class="song-n">${s.featured ? '' : i+1}</div>
+        <div class="song-art" style="background:${MOOD_COLORS[s.mood]}">${MOOD_EMOJIS[s.mood]||'♪'}</div>
+        <div class="song-info">
+          <div class="song-t">${esc(s.title)}</div>
+          <div class="song-a">${esc(s.artist)}</div>
+        </div>
+        <button class="song-del" onclick="deleteSong('${s.id}',event)">✕</button>
+      </div>
+      ${embedSrc ? `<div class="sp-embed" style="margin:4px 0 6px"><iframe src="${embedSrc}" width="100%" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;display:block"></iframe></div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function fmtMemDate(d) {
+  if (!d) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d))
+    return new Date(d + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  return d;
+}
+
+function toISODate(d) {
+  if (!d) return new Date().toISOString().slice(0,10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+  const p = new Date(d);
+  return isNaN(p) ? new Date().toISOString().slice(0,10) : p.toISOString().slice(0,10);
+}
+
+function renderMemories() {
+  const el = document.getElementById('notes-list');
+  if (!el) return;
+  if (!state.memories.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:16px 0">Add a memory tied to music</div>';
+    return;
+  }
+  el.innerHTML = state.memories.map(m => `
+    <div class="note-card" style="position:relative">
+      <div class="note-text">"${esc(m.text)}"</div>
+      <div class="note-meta">${m.song ? esc(m.song) + ' · ' : ''}${fmtMemDate(m.date)}</div>
+      ${m.spotifyUrl ? spEmbedHtml(m.spotifyUrl, 80) : ''}
+      <button onclick="openModal('editmemory','${m.id}')" style="position:absolute;top:10px;right:10px;background:var(--input-bg);border:none;border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--text-2);cursor:pointer;opacity:0;transition:opacity .15s" class="mem-edit-btn">Edit</button>
+    </div>
+  `).join('');
+}
+
+function deleteMemory(id) {
+  state.memories = state.memories.filter(m => m.id !== id);
+  saveState(); closeModal(); renderMemories();
+}
+
+function setFeatured(id) {
+  state.songs.forEach(s => s.featured = s.id === id);
+  saveState(); renderSound();
+}
+
+function deleteSong(id, e) {
+  e.stopPropagation();
+  state.songs = state.songs.filter(s => s.id !== id);
+  saveState(); renderSound();
+}
+
+// ============================================================
+// LEDGER - LISTS
+// ============================================================
+function renderLists() {
+  const wrap = document.getElementById('lists-wrap');
+  if (!wrap) return;
+
+  if (!state.lists.length) {
+    wrap.innerHTML = '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:20px 0">No lists yet</div>';
+    return;
+  }
+
+  wrap.innerHTML = state.lists.map(list => {
+    const done = list.items.filter(i => i.done).length;
+    const total = list.items.length;
+    return `
+    <div class="list-card">
+      <div class="list-head">
+        <div class="list-title">${esc(list.name)}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="list-prog">${done}/${total}</div>
+          <button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="openModal('deletelist','${list.id}')">✕</button>
+        </div>
+      </div>
+      <div class="list-items" id="list-${list.id}">
+        ${list.items.length ? list.items.map(item => `
+          <div class="li-row ${item.done ? 'done' : ''}" id="li-${item.id}">
+            <div class="cb" onclick="toggleItem('${list.id}','${item.id}')"><span class="cb-chk">✓</span></div>
+            <div class="li-text" onclick="toggleItem('${list.id}','${item.id}')">${esc(item.text)}</div>
+            <button class="li-edit" onclick="editItem('${list.id}','${item.id}',event)" title="Edit">✎</button>
+            <button class="li-del" onclick="deleteItem('${list.id}','${item.id}',event)">✕</button>
+          </div>
+        `).join('') : '<div style="color:var(--text-3);font-size:12px;padding:6px 0">Empty list</div>'}
+      </div>
+      <div class="add-row">
+        <input class="gi" placeholder="Add item..." id="input-${list.id}" onkeydown="if(event.key==='Enter')addItem('${list.id}')">
+        <button class="btn-add" onclick="addItem('${list.id}')">+ Add</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleItem(listId, itemId) {
+  const list = state.lists.find(l => l.id === listId);
+  if (!list) return;
+  const item = list.items.find(i => i.id === itemId);
+  if (item) item.done = !item.done;
+  saveState(); renderLists();
+}
+
+function addItem(listId) {
+  const input = document.getElementById('input-' + listId);
+  if (!input || !input.value.trim()) return;
+  const list = state.lists.find(l => l.id === listId);
+  if (!list) return;
+  list.items.push({ id: uid(), text: input.value.trim(), done: false });
+  input.value = '';
+  saveState(); renderLists();
+}
+
+function deleteItem(listId, itemId, e) {
+  e.stopPropagation();
+  const list = state.lists.find(l => l.id === listId);
+  if (!list) return;
+  list.items = list.items.filter(i => i.id !== itemId);
+  saveState(); renderLists();
+}
+
+function editItem(listId, itemId, e) {
+  e.stopPropagation();
+  const row = document.getElementById('li-' + itemId);
+  if (!row) return;
+  const textEl = row.querySelector('.li-text');
+  if (!textEl) return;
+  const current = textEl.textContent;
+  textEl.innerHTML = `<input class="li-edit-input" id="li-edit-${itemId}" value="${esc(current)}"
+    onkeydown="if(event.key==='Enter')saveItemEdit('${listId}','${itemId}');if(event.key==='Escape')renderLists();"
+    onblur="saveItemEdit('${listId}','${itemId}')">`;
+  const input = document.getElementById('li-edit-' + itemId);
+  if (input) { input.focus(); input.select(); }
+}
+
+function saveItemEdit(listId, itemId) {
+  const input = document.getElementById('li-edit-' + itemId);
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  const list = state.lists.find(l => l.id === listId);
+  if (!list) return;
+  const item = list.items.find(i => i.id === itemId);
+  if (item) item.text = val;
+  saveState(); renderLists();
+}
+
+// ============================================================
+// LEDGER - EXPENSES
+// ============================================================
+const CAT_ICONS = { food:'🍜', travel:'✈️', fun:'🎉', home:'🏠', health:'💊', other:'💳' };
+const CAT_COLORS = { food:'#e8a87a', travel:'#a87ae8', fun:'#e87ab0', home:'#7ae8c8', health:'#7ab0e8', other:'#a0a0b0' };
+
+let selectedYM = (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; })();
+
+function renderExpenses() {
+  renderMonthTabs();
+  renderExpStats();
+  renderExpList();
+  renderIncome();
+  renderBalance();
+  renderRecurring();
+}
+
+function thisMonthExpenses() {
+  return state.expenses.filter(e => (e.date||'').startsWith(selectedYM));
+}
+
+function renderMonthTabs() {
+  const el = document.getElementById('month-tabs');
+  if (!el) return;
+  const now = new Date();
+  const currentYM = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  // Collect all months with data
+  const months = new Set([currentYM]);
+  (state.expenses||[]).forEach(e => { if (e.date) months.add(e.date.slice(0,7)); });
+  (state.income||[]).forEach(i => { if (i.date) months.add(i.date.slice(0,7)); });
+  const sorted = [...months].sort().reverse();
+  el.innerHTML = sorted.map(ym => {
+    const [y, m] = ym.split('-');
+    const label = new Date(+y, +m-1, 1).toLocaleDateString('en-US', {month:'short', year:'numeric'});
+    const active = ym === selectedYM;
+    return `<button class="month-tab${active ? ' active' : ''}" onclick="selectMonth('${ym}')">${label}</button>`;
+  }).join('');
+}
+
+function selectMonth(ym) {
+  selectedYM = ym;
+  renderExpenses();
+}
+
+function renderExpStats() {
+  const el = document.getElementById('exp-stats');
+  if (!el) return;
+  const mo = thisMonthExpenses();
+  const total = mo.reduce((s,e) => s + e.amount, 0);
+  const byA = mo.filter(e => e.paidBy === 'a').reduce((s,e) => s + e.amount, 0);
+  const byB = mo.filter(e => e.paidBy === 'b').reduce((s,e) => s + e.amount, 0);
+  const [sy, sm] = selectedYM.split('-');
+  const monthLabel = new Date(+sy, +sm-1, 1).toLocaleDateString('en-US',{month:'long', year:'numeric'});
+  el.innerHTML = `
+    <div class="exp-stat"><div class="exp-stat-v">$${fmt(total)}</div><div class="exp-stat-l">${monthLabel}</div></div>
+    <div class="exp-stat"><div class="exp-stat-v" style="color:var(--lav)">$${fmt(byA)}</div><div class="exp-stat-l">${esc(state.names.a)}</div></div>
+    <div class="exp-stat"><div class="exp-stat-v" style="color:var(--rose)">$${fmt(byB)}</div><div class="exp-stat-l">${esc(state.names.b)}</div></div>
+  `;
+}
+
+function renderExpList() {
+  const el = document.getElementById('exp-list');
+  if (!el) return;
+  const monthExp = thisMonthExpenses();
+  if (!monthExp.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:13px;text-align:center;padding:20px 0">No expenses this month</div>';
+    return;
+  }
+  const sorted = [...monthExp].sort((a,b) => b.date.localeCompare(a.date));
+  el.innerHTML = sorted.map(e => {
+    const paidName = e.paidBy === 'a' ? state.names.a : state.names.b;
+    const paidColor = e.paidBy === 'a' ? 'var(--lav)' : 'var(--rose)';
+    const d = new Date(e.date + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<div class="exp-row">
+      <div class="exp-ico" style="background:${CAT_COLORS[e.cat]}22">${CAT_ICONS[e.cat]||'💳'}</div>
+      <div class="exp-info">
+        <div class="exp-name">${esc(e.name)}</div>
+        <div class="exp-meta">${d} · <span style="color:${paidColor}">${esc(paidName)}</span>${e.fromRecurring ? ' <span style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--teal);background:rgba(32,128,112,.10);padding:2px 6px;border-radius:8px;margin-left:2px">recurring</span>' : ''}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="exp-amt">$${fmt(e.amount)}</div>
+      </div>
+      <button class="exp-del" onclick="deleteExp('${e.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function thisMonthIncome() {
+  if (!state.income) return [];
+  return state.income.filter(i => (i.date||'').startsWith(selectedYM));
+}
+
+function renderBalance() {
+  const moExp = thisMonthExpenses();
+  const moInc = thisMonthIncome();
+  const totalExp = moExp.reduce((s,e) => s + e.amount, 0);
+  const totalInc = moInc.reduce((s,i) => s + i.amount, 0);
+  const net = totalInc - totalExp;
+
+  const incEl  = document.getElementById('bal-income');
+  const expEl  = document.getElementById('bal-expenses');
+  const netEl  = document.getElementById('bal-net');
+  const descEl = document.getElementById('bal-desc');
+  const barEl  = document.getElementById('bal-bar');
+  const pctEl  = document.getElementById('bal-pct-label');
+  if (!netEl) return;
+
+  const [bsy, bsm] = selectedYM.split('-');
+  const balMonthLabel = new Date(+bsy, +bsm-1, 1).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  const now = new Date();
+  const currentYM = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const lblEl = document.getElementById('bal-month-label');
+  if (lblEl) lblEl.textContent = selectedYM === currentYM ? 'This Month' : balMonthLabel;
+
+  if (incEl) incEl.textContent = '$' + fmt(totalInc);
+  if (expEl) expEl.textContent = '$' + fmt(totalExp);
+
+  const sign = net > 0 ? '+' : '';
+  netEl.textContent = sign + '$' + fmt(Math.abs(net));
+  netEl.style.color = net >= 0 ? 'var(--teal)' : 'var(--rose)';
+
+  if (descEl) {
+    descEl.textContent = !totalInc && !totalExp ? '' :
+      net > 0  ? 'surplus' :
+      net < 0  ? 'deficit' : 'perfectly balanced';
+  }
+
+  const spentPct = totalInc > 0 ? Math.min(Math.round(totalExp / totalInc * 100), 100) : (totalExp > 0 ? 100 : 0);
+  if (barEl) {
+    barEl.style.width = spentPct + '%';
+    barEl.style.background = spentPct >= 100 ? 'var(--rose)' : spentPct >= 80 ? 'var(--gold)' : 'var(--teal)';
+  }
+  const leftEl = document.getElementById('bal-pct-spent');
+  if (leftEl) leftEl.textContent = spentPct + '% spent';
+  if (pctEl) pctEl.textContent = totalInc ? '$' + fmt(totalInc - totalExp) + ' left' : '';
+
+  // Category breakdown — all-time expenses
+  const allTotal = state.expenses.reduce((s,e) => s + e.amount, 0);
+  const cats = {};
+  state.expenses.forEach(e => { cats[e.cat] = (cats[e.cat]||0) + e.amount; });
+  const breakdown = document.getElementById('cat-breakdown');
+  if (breakdown) {
+    breakdown.innerHTML = Object.entries(cats).map(([cat, amt]) => {
+      const pctCat = allTotal ? Math.round(amt/allTotal*100) : 0;
+      return `<div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:14px">${CAT_ICONS[cat]||'💳'}</span>
+        <div style="flex:1">
+          <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.08)">
+            <div style="height:100%;width:${pctCat}%;border-radius:2px;background:${CAT_COLORS[cat]||'#aaa'}"></div>
+          </div>
+        </div>
+        <span style="font-size:11px;color:var(--text-2);min-width:44px;text-align:right">$${fmt(amt)}</span>
+      </div>`;
+    }).join('') || '<div style="color:var(--text-3);font-size:12px">No data</div>';
+  }
+}
+
+function renderIncome() {
+  if (!state.income) state.income = [];
+  const mo = thisMonthIncome();
+  const el = document.getElementById('income-list');
+  const totalEl = document.getElementById('income-monthly-total');
+  if (!el) return;
+
+  const total = mo.reduce((s,i) => s + i.amount, 0);
+  if (totalEl) totalEl.textContent = '$' + fmt(total);
+
+  if (!mo.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:6px 0">No income logged this month</div>';
+    return;
+  }
+
+  const sorted = [...mo].sort((a,b) => b.date.localeCompare(a.date));
+  el.innerHTML = sorted.map(i => {
+    const srcName = i.source === 'a' ? state.names.a : i.source === 'b' ? state.names.b : state.names.a + ' & ' + state.names.b;
+    const srcColor = i.source === 'a' ? 'var(--lav)' : i.source === 'b' ? 'var(--rose)' : 'var(--gold)';
+    const d = new Date(i.date + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<div class="income-row">
+      <div class="exp-ico" style="background:rgba(32,128,112,.12)">💰</div>
+      <div class="exp-info">
+        <div class="exp-name">${esc(i.name)}</div>
+        <div class="exp-meta">${d} · <span style="color:${srcColor}">${esc(srcName)}</span></div>
+      </div>
+      <div class="income-amt">+$${fmt(i.amount)}</div>
+      <button class="income-del" onclick="deleteIncome('${i.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteIncome(id) {
+  state.income = state.income.filter(i => i.id !== id);
+  saveState(); renderExpenses();
+}
+
+function deleteExp(id) {
+  state.expenses = state.expenses.filter(e => e.id !== id);
+  saveState(); renderExpenses();
+}
+
+function fmt(n) { return Number(n).toFixed(2); }
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && name==='lists') || (i===1 && name==='expenses'));
+  });
+  document.getElementById('tab-lists').classList.toggle('active', name === 'lists');
+  document.getElementById('tab-expenses').classList.toggle('active', name === 'expenses');
+  if (name === 'expenses') renderExpenses();
+  else renderLists();
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+let modalMode = null;
+let modalExtra = null;
+
+const COLORS = ['#c4b5f4','#f0abca','#86e0d4','#e8d5a3','#f4b5b5','#b5d8f4'];
+
+function openModal(mode, extra) {
+  modalMode = mode;
+  modalExtra = extra || {};
+  const bg = document.getElementById('modal-bg');
+  const title = document.getElementById('modal-title');
+  const body = document.getElementById('modal-body');
+  const saveBtn = document.getElementById('modal-save');
+  saveBtn.textContent = 'Save';
+
+  if (mode === 'event') {
+    title.textContent = 'Add Event';
+    const today = extra && extra.date ? extra.date : new Date().toISOString().slice(0,10);
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Event Name</div><input class="mi" id="m-name" placeholder="Date night, Anniversary..."></div>
+      <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${today}"></div>
+      <div class="mf"><div class="ml">Time (optional)</div><input class="mi" id="m-time" type="time"></div>
+      <div class="mf"><div class="ml">Who</div>
+        <select class="mi" id="m-who">
+          <option value="a">${esc(state.names.a)}</option>
+          <option value="b">${esc(state.names.b)}</option>
+          <option value="s">Together</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Color</div>
+        <div class="color-row">${COLORS.map((c,i) => `<div class="c-opt${i===0?' sel':''}" style="background:${c}" onclick="pickColor(this,'${c}')"></div>`).join('')}</div>
+      </div>
+    `;
+  } else if (mode === 'vault') {
+    title.textContent = 'Add Document';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Name</div><input class="mi" id="m-name" placeholder="Hotel Booking, Flight QR..."></div>
+      <div class="mf"><div class="ml">Type</div>
+        <select class="mi" id="m-type">
+          <option value="pdf">PDF</option>
+          <option value="ticket">Ticket</option>
+          <option value="qr">QR Code</option>
+          <option value="hotel">Hotel</option>
+          <option value="flight">Flight</option>
+          <option value="car">Car Rental</option>
+          <option value="event">Event</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Notes (optional)</div><input class="mi" id="m-note" placeholder="Confirmation #, details..."></div>
+    `;
+  } else if (mode === 'song') {
+    title.textContent = 'Add Song';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Spotify Link (optional)</div><input class="mi" id="m-spotify" placeholder="Paste Spotify track URL…" oninput="previewSpotify(this.value,'sp-preview');fetchSpotifyMeta(this.value)"><div class="sp-field-hint" id="sp-meta-status">Paste a link to auto-fill title &amp; artist</div><div id="sp-preview"></div></div>
+      <div class="mf"><div class="ml">Song Title</div><input class="mi" id="m-title" placeholder="Song name..."></div>
+      <div class="mf"><div class="ml">Artist</div><input class="mi" id="m-artist" placeholder="Artist name..."></div>
+      <div class="mf"><div class="ml">Mood</div>
+        <select class="mi" id="m-mood">
+          <option value="love">Love</option>
+          <option value="chill">Chill</option>
+          <option value="energy">Energy</option>
+          <option value="nostalgia">Nostalgia</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Personal Note (optional)</div><input class="mi" id="m-note" placeholder="Why this song matters..."></div>
+    `;
+  } else if (mode === 'memory') {
+    title.textContent = 'Add Musical Memory';
+    const today = new Date().toISOString().slice(0,10);
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Memory</div><textarea class="mi" id="m-text" rows="3" placeholder="The moment this song defined..." style="resize:none;line-height:1.5"></textarea></div>
+      <div class="mf"><div class="ml">Associated Song</div><input class="mi" id="m-song" placeholder="Song · Artist"></div>
+      <div class="mf"><div class="ml">Spotify Link (optional)</div><input class="mi" id="m-spotify" placeholder="Paste Spotify track URL…" oninput="previewSpotify(this.value,'sp-preview')"><div class="sp-field-hint">e.g. open.spotify.com/track/…</div><div id="sp-preview"></div></div>
+      <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${today}"></div>
+    `;
+  } else if (mode === 'editmemory') {
+    const mem = state.memories.find(m => m.id === extra);
+    if (!mem) return;
+    title.textContent = 'Edit Memory';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Memory</div><textarea class="mi" id="m-text" rows="3" style="resize:none;line-height:1.5">${esc(mem.text)}</textarea></div>
+      <div class="mf"><div class="ml">Associated Song</div><input class="mi" id="m-song" value="${esc(mem.song||'')}" placeholder="Song · Artist"></div>
+      <div class="mf"><div class="ml">Spotify Link (optional)</div><input class="mi" id="m-spotify" value="${esc(mem.spotifyUrl||'')}" placeholder="Paste Spotify track URL…" oninput="previewSpotify(this.value,'sp-preview')"><div class="sp-field-hint">e.g. open.spotify.com/track/…</div><div id="sp-preview">${mem.spotifyUrl ? spEmbedHtml(mem.spotifyUrl, 80) : ''}</div></div>
+      <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${toISODate(mem.date)}"></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--row-divider)">
+        <button onclick="deleteMemory('${mem.id}')" style="background:rgba(200,60,60,.1);color:#c03030;border:none;width:100%;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">Delete Memory</button>
+      </div>
+    `;
+    saveBtn.textContent = 'Save Changes';
+  } else if (mode === 'newlist') {
+    title.textContent = 'New List';
+    body.innerHTML = `<div class="mf"><div class="ml">List Name</div><input class="mi" id="m-name" placeholder="Groceries, Travel, Wishlist..."></div>`;
+  } else if (mode === 'deletelist') {
+    title.textContent = 'Delete List?';
+    body.innerHTML = `<div style="color:var(--text-2);font-size:14px;line-height:1.6">This will permanently delete this list and all its items.</div>`;
+    saveBtn.textContent = 'Delete';
+  } else if (mode === 'expense') {
+    title.textContent = 'Add Expense';
+    const today = new Date().toISOString().slice(0,10);
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Description</div><input class="mi" id="m-name" placeholder="Dinner, Airbnb, Concert..."></div>
+      <div class="mf"><div class="ml">Amount ($)</div><input class="mi" id="m-amount" type="number" step="0.01" min="0" placeholder="0.00"></div>
+      <div class="mf"><div class="ml">Paid By</div>
+        <select class="mi" id="m-paid">
+          <option value="a">${esc(state.names.a)}</option>
+          <option value="b">${esc(state.names.b)}</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Category</div>
+        <select class="mi" id="m-cat">
+          <option value="food">Food & Drink</option>
+          <option value="travel">Travel</option>
+          <option value="fun">Fun</option>
+          <option value="home">Home</option>
+          <option value="health">Health</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${today}"></div>
+    `;
+  } else if (mode === 'settings') {
+    title.textContent = 'Settings';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Your Name</div><input class="mi" id="m-name-a" value="${esc(state.names.a)}" placeholder="Your name"></div>
+      <div class="mf"><div class="ml">Partner's Name</div><input class="mi" id="m-name-b" value="${esc(state.names.b)}" placeholder="Partner's name"></div>
+    `;
+    saveBtn.textContent = 'Save Names';
+
+  } else if (mode === 'trip') {
+    _selectedLoc = {};
+    title.textContent = 'Plan a Trip';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Destination</div>
+        <div class="typeahead-wrap">
+          <input class="mi" id="m-dest" placeholder="Paris, Amalfi Coast, Tokyo..." autocomplete="off" oninput="locationInput(this)">
+          <div class="ta-dd" id="ta-dd"></div>
+        </div>
+      </div>
+      <div class="mf"><div class="ml">Trip name (optional)</div><input class="mi" id="m-tripname" placeholder="Honeymoon, Summer 2025..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="mf"><div class="ml">Start Date</div><input class="mi" id="m-start" type="date"></div>
+        <div class="mf"><div class="ml">End Date</div><input class="mi" id="m-end" type="date"></div>
+      </div>
+      <div class="mf"><div class="ml">Travelers</div>
+        <select class="mi" id="m-who">
+          <option value="s">${esc(state.names.a)} & ${esc(state.names.b)}</option>
+          <option value="a">${esc(state.names.a)} only</option>
+          <option value="b">${esc(state.names.b)} only</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Status</div>
+        <select class="mi" id="m-status">
+          <option value="planning">Planning</option>
+          <option value="booked">Booked</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Notes (optional)</div><textarea class="mi" id="m-tripnote" rows="2" placeholder="Hotel ideas, must-sees..." style="resize:none;line-height:1.5"></textarea></div>
+    `;
+    saveBtn.textContent = 'Add Trip';
+
+  } else if (mode === 'edittrip') {
+    const trip = state.trips.find(t => t.id === extra);
+    if (!trip) return;
+    _selectedLoc = { displayName: trip.locationDisplay||trip.destination, shortName: trip.destination, lat: trip.lat, lon: trip.lon };
+    title.textContent = 'Edit Trip';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Destination</div>
+        <div class="typeahead-wrap">
+          <input class="mi" id="m-dest" value="${esc(trip.destination)}" autocomplete="off" oninput="locationInput(this)">
+          <div class="ta-dd" id="ta-dd"></div>
+        </div>
+      </div>
+      <div class="mf"><div class="ml">Trip name (optional)</div><input class="mi" id="m-tripname" value="${esc(trip.name||'')}" placeholder="Honeymoon, Summer 2025..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="mf"><div class="ml">Start Date</div><input class="mi" id="m-start" type="date" value="${trip.startDate||''}"></div>
+        <div class="mf"><div class="ml">End Date</div><input class="mi" id="m-end" type="date" value="${trip.endDate||''}"></div>
+      </div>
+      <div class="mf"><div class="ml">Travelers</div>
+        <select class="mi" id="m-who">
+          <option value="s" ${trip.who==='s'?'selected':''}>${esc(state.names.a)} & ${esc(state.names.b)}</option>
+          <option value="a" ${trip.who==='a'?'selected':''}>${esc(state.names.a)} only</option>
+          <option value="b" ${trip.who==='b'?'selected':''}>${esc(state.names.b)} only</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Status</div>
+        <select class="mi" id="m-status">
+          <option value="planning" ${trip.status==='planning'?'selected':''}>Planning</option>
+          <option value="booked" ${trip.status==='booked'?'selected':''}>Booked</option>
+          <option value="ongoing" ${trip.status==='ongoing'?'selected':''}>Ongoing</option>
+          <option value="completed" ${trip.status==='completed'?'selected':''}>Completed</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Notes</div><textarea class="mi" id="m-tripnote" rows="2" style="resize:none;line-height:1.5">${esc(trip.notes||'')}</textarea></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--row-divider)">
+        <button class="btn-cancel" style="background:rgba(200,60,60,.1);color:#c03030;border:none;width:100%;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer" onclick="deleteTrip('${extra}',{stopPropagation:()=>{}});closeModal()">Delete This Trip</button>
+      </div>
+    `;
+    saveBtn.textContent = 'Save Changes';
+
+  } else if (mode === 'tripdetail') {
+    const trip = state.trips.find(t => t.id === extra);
+    if (!trip) return;
+    document.getElementById('modal').classList.add('wide');
+    const displayName = trip.name || trip.destination;
+    title.textContent = displayName;
+    const lpRecs = getLPRecs(trip.destination);
+    const lpSearch = encodeURIComponent(trip.destination);
+    body.innerHTML = `
+      <div class="td-hero" style="background:${TRIP_GRADIENTS[trip.status]||TRIP_GRADIENTS.planning};margin-bottom:14px">
+        <div style="padding:14px 18px 10px;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">${esc(trip.name || trip.destination)}</div>
+          ${trip.name ? `<div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">${esc(trip.destination)}</div>` : ''}
+        </div>
+      </div>
+      <div class="m-tabs">
+        <div class="m-tab active" data-tab="overview" onclick="switchTripTab('overview','${trip.id}')">Overview</div>
+        <div class="m-tab" data-tab="itinerary" onclick="switchTripTab('itinerary','${trip.id}')">Itinerary</div>
+        <div class="m-tab" data-tab="discover" onclick="switchTripTab('discover','${trip.id}')">Discover</div>
+      </div>
+
+      <div class="m-tab-content active" data-tab="overview">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div style="background:var(--input-bg);border-radius:10px;padding:10px 12px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:4px">Dates</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">
+              ${trip.startDate ? new Date(trip.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'TBD'}
+              ${trip.endDate ? ' – '+new Date(trip.endDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}
+            </div>
+          </div>
+          <div style="background:var(--input-bg);border-radius:10px;padding:10px 12px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:4px">Travelers</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">${trip.who==='a' ? esc(state.names.a) : trip.who==='b' ? esc(state.names.b) : esc(state.names.a)+' & '+esc(state.names.b)}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="trip-status s-${trip.status}" style="font-size:11px">${trip.status}</span>
+          <button class="btn-add" onclick="closeModal();openModal('edittrip','${trip.id}')" style="font-size:11px;padding:5px 12px">Edit Trip</button>
+        </div>
+        <div class="mf"><div class="ml">Notes</div>
+          <textarea class="mi" id="trip-notes-ta" rows="3" placeholder="Ideas, links, hotel info..." style="resize:none;line-height:1.5">${esc(trip.notes||'')}</textarea>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="ml" style="margin-bottom:0;font-size:10px">Stops</div>
+            <button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="showStopForm('${trip.id}')">+ Add Stop</button>
+          </div>
+          <div id="trip-stops"></div>
+          <div id="trip-stop-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
+            <div style="display:grid;grid-template-columns:1fr;gap:8px">
+              <div class="typeahead-wrap">
+                <input class="gi" id="stop-dest" placeholder="Destination (Paris, Rome…)" style="font-size:13px" autocomplete="off" oninput="stopLocationInput(this)">
+                <div class="ta-dd" id="stop-dest-dd"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">From</div><input class="gi" id="stop-start" type="date" style="font-size:12px"></div>
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">To</div><input class="gi" id="stop-end" type="date" style="font-size:12px"></div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn-save" style="flex:1;padding:8px" onclick="saveTripStop('${trip.id}')">Add</button>
+                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-stop-form').style.display='none'">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="ml" style="margin-bottom:0;font-size:10px">Accommodation</div>
+            <button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="showAccomForm('${trip.id}')">+ Add</button>
+          </div>
+          <div id="trip-accom-list"></div>
+          <div id="trip-accom-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <input class="gi" id="accom-name" placeholder="Hotel, Airbnb, hostel name…" style="font-size:13px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-in</div><input class="gi" id="accom-checkin" type="date" style="font-size:12px"></div>
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-out</div><input class="gi" id="accom-checkout" type="date" style="font-size:12px"></div>
+              </div>
+              <input class="gi" id="accom-link" placeholder="Booking link (optional)" style="font-size:12px">
+              <div style="display:flex;gap:8px">
+                <button class="btn-save" style="flex:1;padding:8px" onclick="saveAccom('${trip.id}')">Add</button>
+                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-accom-form').style.display='none'">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px;font-size:12px;color:var(--text-2)">
+          <div style="background:var(--input-bg);border-radius:8px;padding:8px 10px;text-align:center">
+            <div style="font-size:18px;font-weight:700;color:var(--text-1)">${(trip.itinerary||[]).length}</div>
+            <div>itinerary stops</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-tab-content" data-tab="itinerary">
+        <div id="itin-body"></div>
+      </div>
+
+      <div class="m-tab-content" data-tab="discover">
+        <div id="discover-body">
+          <div style="text-align:center;padding:20px 0">
+            <button class="btn-save" style="padding:10px 22px;font-size:13px" onclick="loadDiscover('${trip.id}')">
+              ✦ Load Recommendations
+            </button>
+            ${trip.lat ? '' : `<div style="font-size:11px;color:var(--text-3);margin-top:8px">Use the typeahead when setting destination for location-aware results</div>`}
+          </div>
+          ${lpRecs.length ? `
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:8px">Curated picks</div>
+            ${lpRecs.map(r => `
+              <div class="lp-rec-item">
+                <div class="lp-dot" style="background:${r.col}"></div>
+                <div style="flex:1;min-width:0"><div class="lp-title">${esc(r.desc)}</div><div class="lp-cat">${ITIN_CATS[r.cat]?.label||r.cat}</div></div>
+                <button class="disc-add-btn" data-trip="${trip.id}" data-name="${esc(r.desc)}" data-cat="${esc(ITIN_CATS[r.cat]?.label||r.cat)}" onclick="addDiscoverToItinerary(this)">+ Itinerary</button>
+              </div>`).join('')}
+          ` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+            <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${lpSearch}" target="_blank" rel="noopener">Lonely Planet →</a>
+            <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${lpSearch}" target="_blank" rel="noopener">TripAdvisor →</a>
+            <a class="lp-link" href="https://www.google.com/maps/search/${lpSearch}+things+to+do" target="_blank" rel="noopener">Google Maps →</a>
+          </div>
+        </div>
+      </div>
+    `;
+    saveBtn.textContent = 'Save & Close';
+    setTimeout(() => { renderTripStops(trip.id); renderTripAccom(trip.id); }, 0);
+
+  } else if (mode === 'recurring') {
+    title.textContent = 'Add Recurring Expense';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Name</div><input class="mi" id="m-name" placeholder="Netflix, Rent, Gym..."></div>
+      <div class="mf"><div class="ml">Amount</div><input class="mi" id="m-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="mf"><div class="ml">Frequency</div>
+        <select class="mi" id="m-freq">
+          <option value="monthly">Monthly</option>
+          <option value="weekly">Weekly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Paid by</div>
+        <select class="mi" id="m-paid">
+          <option value="a">${esc(state.names.a)}</option>
+          <option value="b">${esc(state.names.b)}</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Category</div>
+        <select class="mi" id="m-cat">
+          <option value="housing">Housing</option>
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="health">Health</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    `;
+    saveBtn.textContent = 'Add Recurring';
+
+  } else if (mode === 'income') {
+    title.textContent = 'Log Income';
+    const today = new Date().toISOString().slice(0,10);
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Description</div><input class="mi" id="m-name" placeholder="Salary, Freelance, Bonus..."></div>
+      <div class="mf"><div class="ml">Amount</div><input class="mi" id="m-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="mf"><div class="ml">Received by</div>
+        <select class="mi" id="m-source">
+          <option value="s">${esc(state.names.a)} & ${esc(state.names.b)}</option>
+          <option value="a">${esc(state.names.a)}</option>
+          <option value="b">${esc(state.names.b)}</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${today}"></div>
+    `;
+    saveBtn.textContent = 'Log Income';
+  }
+
+  bg.classList.add('open');
+  setTimeout(() => {
+    const first = body.querySelector('input, textarea, select');
+    if (first) first.focus();
+  }, 200);
+}
+
+function pickColor(el, color) {
+  document.querySelectorAll('.c-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  el.dataset.color = color;
+}
+
+function getSelectedColor() {
+  const sel = document.querySelector('.c-opt.sel');
+  return sel ? (sel.dataset.color || sel.style.background) : COLORS[0];
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal').classList.remove('wide');
+  const cancelBtn = document.getElementById('modal-cancel');
+  if (cancelBtn) cancelBtn.textContent = 'Cancel';
+  const saveBtn = document.getElementById('modal-save');
+  if (saveBtn) saveBtn.textContent = 'Save';
+  modalMode = null;
+  modalExtra = null;
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modal-bg')) closeModal();
+}
+
+function saveModal() {
+  const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+
+  if (modalMode === 'event') {
+    const name = v('m-name'); const date = v('m-date');
+    if (!name || !date) return shake();
+    state.events.push({ id: uid(), name, date, time: v('m-time'), who: v('m-who'), color: getSelectedColor() });
+    saveState(); closeModal(); renderCalendar();
+
+  } else if (modalMode === 'vault') {
+    const name = v('m-name');
+    if (!name) return shake();
+    state.vault.push({ id: uid(), name, type: v('m-type'), note: v('m-note') });
+    saveState(); closeModal(); renderVault();
+
+  } else if (modalMode === 'song') {
+    const title = v('m-title'); const artist = v('m-artist');
+    if (!title || !artist) return shake();
+    state.songs.push({ id: uid(), title, artist, mood: v('m-mood'), note: v('m-note'), spotifyUrl: v('m-spotify') || '', featured: !state.songs.length });
+    saveState(); closeModal(); renderSound();
+
+  } else if (modalMode === 'memory') {
+    const text = v('m-text');
+    if (!text) return shake();
+    state.memories.unshift({ id: uid(), text, song: v('m-song'), spotifyUrl: v('m-spotify') || '', date: v('m-date') || new Date().toISOString().slice(0,10) });
+    saveState(); closeModal(); renderMemories();
+
+  } else if (modalMode === 'editmemory') {
+    const mem = state.memories.find(m => m.id === modalExtra);
+    if (!mem) return;
+    const text = v('m-text');
+    if (!text) return shake();
+    mem.text = text;
+    mem.song = v('m-song');
+    mem.spotifyUrl = v('m-spotify') || '';
+    mem.date = v('m-date') || mem.date;
+    saveState(); closeModal(); renderMemories();
+
+  } else if (modalMode === 'newlist') {
+    const name = v('m-name');
+    if (!name) return shake();
+    state.lists.push({ id: uid(), name, items: [] });
+    saveState(); closeModal(); renderLists();
+
+  } else if (modalMode === 'deletelist') {
+    state.lists = state.lists.filter(l => l.id !== modalExtra);
+    saveState(); closeModal(); renderLists();
+
+  } else if (modalMode === 'expense') {
+    const name = v('m-name'); const amt = parseFloat(document.getElementById('m-amount')?.value);
+    if (!name || !amt || amt <= 0) return shake();
+    state.expenses.push({ id: uid(), name, amount: amt, paidBy: v('m-paid'), cat: v('m-cat'), date: v('m-date') });
+    saveState(); closeModal(); renderExpenses();
+
+  } else if (modalMode === 'settings') {
+    const nameA = document.getElementById('m-name-a')?.value.trim();
+    const nameB = document.getElementById('m-name-b')?.value.trim();
+    if (nameA) state.names.a = nameA;
+    if (nameB) state.names.b = nameB;
+    saveState(); closeModal(); updateNames(); renderAll();
+
+  } else if (modalMode === 'trip') {
+    const dest = v('m-dest');
+    if (!dest) return shake();
+    if (!state.trips) state.trips = [];
+    state.trips.push({
+      id: uid(),
+      destination: _selectedLoc.shortName || dest,
+      locationDisplay: _selectedLoc.displayName || dest,
+      name: v('m-tripname') || '',
+      lat: _selectedLoc.lat || null, lon: _selectedLoc.lon || null,
+      startDate: v('m-start'), endDate: v('m-end'),
+      who: v('m-who'), status: v('m-status'),
+      notes: v('m-tripnote'), packing: [], itinerary: [], stops: []
+    });
+    saveState(); closeModal(); renderTravel(); renderCalendar();
+
+  } else if (modalMode === 'edittrip') {
+    const trip = state.trips.find(t => t.id === modalExtra);
+    if (!trip) return;
+    const dest = v('m-dest');
+    if (!dest) return shake();
+    trip.destination = _selectedLoc.shortName || dest;
+    trip.locationDisplay = _selectedLoc.displayName || dest;
+    trip.name = v('m-tripname') || '';
+    if (_selectedLoc.lat) { trip.lat = _selectedLoc.lat; trip.lon = _selectedLoc.lon; }
+    trip.startDate = v('m-start');
+    trip.endDate = v('m-end');
+    trip.who = v('m-who');
+    trip.status = v('m-status');
+    trip.notes = v('m-tripnote');
+    saveState(); closeModal(); renderTravel(); renderCalendar();
+
+  } else if (modalMode === 'tripdetail') {
+    const trip = state.trips.find(t => t.id === modalExtra);
+    if (trip) {
+      const notesEl = document.getElementById('trip-notes-ta');
+      if (notesEl) trip.notes = notesEl.value;
+      saveState();
+    }
+    document.getElementById('modal').classList.remove('wide');
+    closeModal(); renderTravel();
+
+  } else if (modalMode === 'recurring') {
+    const name = v('m-name'); const amt = parseFloat(document.getElementById('m-amount')?.value);
+    if (!name || !amt || amt <= 0) return shake();
+    if (!state.recurring) state.recurring = [];
+    state.recurring.push({ id: uid(), name, amount: amt, frequency: v('m-freq'), paidBy: v('m-paid'), cat: v('m-cat') });
+    saveState(); closeModal(); renderRecurring();
+
+  } else if (modalMode === 'income') {
+    const name = v('m-name'); const amt = parseFloat(document.getElementById('m-amount')?.value);
+    if (!name || !amt || amt <= 0) return shake();
+    if (!state.income) state.income = [];
+    state.income.push({ id: uid(), name, amount: amt, source: v('m-source'), date: v('m-date') || new Date().toISOString().slice(0,10) });
+    saveState(); closeModal(); renderExpenses();
+  }
+}
+
+function closeModalCancel() {
+  if (modalMode === 'tripdetail') {
+    document.getElementById('modal').classList.remove('wide');
+  }
+  closeModal();
+}
+
+function shake() {
+  const modal = document.getElementById('modal');
+  modal.style.animation = 'none';
+  modal.offsetHeight;
+  modal.style.animation = 'shake .3s ease';
+}
+
+function openSettings() { openModal('settings'); }
+
+// ============================================================
+// FAB
+// ============================================================
+function fabClick() {
+  if (currentPanel === 'home') return;
+  if (currentPanel === 'sight') openModal('event', { date: new Date().toISOString().slice(0,10) });
+  else if (currentPanel === 'sound') openModal('song');
+  else if (currentPanel === 'ledger') {
+    const activeTab = document.getElementById('tab-expenses').classList.contains('active') ? 'expenses' : 'lists';
+    if (activeTab === 'expenses') openModal('expense');
+    else openModal('newlist');
+  }
+}
+
+// ============================================================
+// NAMES
+// ============================================================
+function updateNames() {
+  const a = document.getElementById('name-a-display');
+  const b = document.getElementById('name-b-display');
+  const balA = document.getElementById('bal-name-a');
+  const balB = document.getElementById('bal-name-b');
+  if (a) a.textContent = state.names.a;
+  if (b) b.textContent = state.names.b;
+  if (balA) balA.textContent = state.names.a;
+  if (balB) balB.textContent = state.names.b;
+}
+
+// ============================================================
+// TRAVEL
+// ============================================================
+// ============================================================
+// TRAVEL — DATA & HELPERS
+// ============================================================
+const TRIP_GRADIENTS = {
+  planning:'linear-gradient(135deg,#7250c4,#c0457f)',
+  booked:'linear-gradient(135deg,#208070,#2060a8)',
+  ongoing:'linear-gradient(135deg,#9a6c12,#c0457f)',
+  completed:'linear-gradient(135deg,#606080,#404060)'
+};
+
+const ITIN_CATS = {
+  sight:        { label:'Sight',        col:'#7250c4' },
+  food:         { label:'Food & Drink', col:'#c0457f' },
+  activity:     { label:'Activity',     col:'#208070' },
+  transport:    { label:'Transport',    col:'#2060a8' },
+  accommodation:{ label:'Stay',         col:'#9a6c12' },
+  other:        { label:'Other',        col:'#888' }
+};
+
+const LP_RECS = {
+  paris:['Eiffel Tower at dusk — buy tickets online and picnic on Champ de Mars first|sight|#7250c4','Le Marais for falafel on Rue des Rosiers + Place des Vosges afternoon|food|#c0457f','Louvre via the Richelieu wing — avoid the main queue; allow a full day|sight|#7250c4','Montmartre at dawn before the crowds; Sacré-Cœur views are worth the climb|activity|#208070','Canal Saint-Martin stroll through indie cafés and iron footbridges|activity|#208070','Berthillon ice cream on Île Saint-Louis — best in the city|food|#c0457f'],
+  rome:['Colosseum at opening (9 am) with pre-booked skip-the-line tickets|sight|#7250c4','Trastevere for an evening passeggiata and dinner at Da Enzo al 29|food|#c0457f','Vatican Museums — book the first entry slot; Sistine Chapel is at the end|sight|#7250c4','Campo de\' Fiori morning market then espresso at Sant\'Eustachio|food|#c0457f','Borghese Gallery — capped entry, must book; Bernini sculptures are unmissable|sight|#7250c4','Throw a coin in the Trevi Fountain at sunrise — genuinely magical|activity|#208070'],
+  tokyo:['Tsukiji Outer Market breakfast — tamagoyaki skewer + bluefin sashimi|food|#c0457f','Yanaka for old-Edo atmosphere, cats and the shotengai shopping street|activity|#208070','teamLab Borderless immersive art — book months ahead|activity|#208070','Shinjuku Gyoen for cherry blossoms or autumn maples; arrive early|sight|#7250c4','Hakone day trip for Mt Fuji views + rotemburo onsen soaking|activity|#208070','Depachika (department-store basement food halls) — eat everything|food|#c0457f'],
+  'new york':['High Line walk from Gansevoort to 34th St, then Chelsea Market for lunch|activity|#208070','Smorgasburg in Williamsburg (weekends) — the city\'s best food market|food|#c0457f','The Met 5th floor — roof sculpture garden views over Central Park|sight|#7250c4','Joe\'s Pizza on Carmine St — non-negotiable slice pilgrimage|food|#c0457f','Brooklyn Bridge walk westbound at golden hour for skyline photos|sight|#7250c4','West Village brunch crawl: Buvette → Sant Ambroeus → Magnolia|food|#c0457f'],
+  london:['Borough Market on a Thursday or Friday — earlier and quieter than weekends|food|#c0457f','Tate Modern + walk across Millennium Bridge to St Paul\'s Cathedral|sight|#7250c4','Columbia Road Flower Market Sunday morning (arrive before 9 am)|activity|#208070','Afternoon tea at Sketch or Fortnum & Mason — worth the splurge|food|#c0457f','Greenwich Park for city views + the Prime Meridian line at the Observatory|sight|#7250c4','Hampstead Heath morning walk for ponds and panoramic skyline|activity|#208070'],
+  barcelona:['La Sagrada Família — book the tower access ticket for rooftop views|sight|#7250c4','El Born neighborhood for tapas at Bar del Pla + the Gothic Quarter|food|#c0457f','Park Güell at opening (8 am) — the tiled terrace crowd-free|sight|#7250c4','La Barceloneta beach and then vermouth at a chiringuito bar|activity|#208070','Mercat de la Boqueria for jamón and fresh cava; avoid the tourist stalls|food|#c0457f','Pedrera (Casa Milà) rooftop at dusk — the best Modernisme sunset|sight|#7250c4'],
+  amsterdam:['Anne Frank House — book online weeks ahead; mornings are quietest|sight|#7250c4','Rijksmuseum for Vermeer and Rembrandt; book the guided highlights tour|sight|#7250c4','Canal ring bike ride via Jordaan and then stroopwafels at a market|activity|#208070','Foodhallen in De Pijp for a relaxed indoor food-market evening|food|#c0457f','Moco Museum for Banksy + modern art without the Rijksmuseum crowds|sight|#7250c4','Cycle north to Amsterdam Noord and NDSM Wharf for street art|activity|#208070'],
+  prague:['Charles Bridge at 6 am before the tour groups — totally peaceful|sight|#7250c4','Old Town Square astronomical clock on the hour, then café in the square|sight|#7250c4','Vinohrady neighborhood for craft beer at Vinohradský Pivovar|food|#c0457f','Prague Castle at dusk for the city panorama across the river|sight|#7250c4','Lokál for traditional svíčková (beef in cream sauce) and tankové pivo|food|#c0457f','Letná Park for city views and the giant metronome|activity|#208070'],
+  lisbon:['Alfama tram 28 — take it early morning to avoid queues; walk back down|activity|#208070','LX Factory Sunday market — vintage, design and the best bifanas|food|#c0457f','Pastéis de Belém for the original pastel de nata (custard tart)|food|#c0457f','Jerónimos Monastery — stunning Manueline architecture; free on Sundays|sight|#7250c4','Miradouro da Graça at sunset with a glass of Ginjinha|activity|#208070','Day trip to Sintra palaces: Pena + Quinta da Regaleira|sight|#7250c4'],
+  bali:['Tegallalang Rice Terraces at sunrise before tour buses arrive|sight|#7250c4','Ubud Sacred Monkey Forest walk at dusk — golden hour and calm monkeys|activity|#208070','Traditional Balinese cooking class in Ubud with market visit|food|#c0457f','Tanah Lot temple at sunset — iconic sea-cliff silhouette|sight|#7250c4','Seminyak beach clubs for sunset: Ku De Ta or Potato Head|activity|#208070','Eat at Locavore in Ubud — one of Asia\'s best restaurants|food|#c0457f'],
+  santorini:['Oia village at sunset — arrive 90 min early and claim a wall spot|sight|#7250c4','Caldera sailing tour with stops at hot springs and volcanic islands|activity|#208070','Amoudi Bay for octopus grilled over charcoal at the waterside tavernas|food|#c0457f','Akrotiri ancient ruins — the Pompeii of the Aegean, less crowded|sight|#7250c4','Wine tasting at Santo Wines — the caldera views from the terrace are superb|food|#c0457f','Red Beach walk (short hike; extraordinary volcanic landscape)|activity|#208070'],
+  amalfi:['Positano from the sea — arrive by ferry to see the stacked pastel houses|sight|#7250c4','Path of the Gods hike (Sentiero degli Dei) from Agerola to Nocelle|activity|#208070','Ravello for Wagner-era gardens and the best views on the coast|sight|#7250c4','Limoncello tasting in Amalfi town at one of the family-run distilleries|food|#c0457f','Furore Fjord — hidden inlet perfect for a morning swim|activity|#208070','Fresh sfogliatella and espresso at any bar along the seafront|food|#c0457f'],
+  kyoto:['Fushimi Inari at dawn — thousands of torii gates with almost no crowds|sight|#7250c4','Arashiyama Bamboo Grove at 7 am before the day-trippers arrive|sight|#7250c4','Nishiki Market for tofu skewers, pickles and Japanese pantry staples|food|#c0457f','Gion Corner evening walk hoping to spot a maiko|activity|#208070','Philosopher\'s Path cherry blossom walk in spring or maple in autumn|activity|#208070','Kaiseki dinner at a traditional machiya for the full multi-course ritual|food|#c0457f'],
+  iceland:['Golden Circle day trip: Geysir, Gullfoss + Þingvellir — do it yourself|activity|#208070','Northern Lights chase from Reykjavik (Sept–March); check aurora forecast|sight|#7250c4','Blue Lagoon geothermal spa — book the Retreat package; arrive at opening|activity|#208070','Skógafoss waterfall walk behind the falls + Seljalandsfoss for sunset|sight|#7250c4','Reykjavik\'s Laugardalslaug hot-pot pool — where locals actually go|activity|#208070','Whole slow-roasted lamb (lamb soup) at Fjörubúðin in Stokkseyri|food|#c0457f'],
+  maldives:['House reef snorkel at dawn — manta rays and reef sharks at their calmest|activity|#208070','Sandbank sunset picnic arranged through your resort|activity|#208070','Night snorkelling with bioluminescent plankton|activity|#208070','Local island day trip to Maafushi — see local life beyond the resorts|sight|#7250c4','Overwater villa at dusk: glass floor, sea turtles below|activity|#208070','Sunset dolphin cruise — almost guaranteed in the Ari Atoll|activity|#208070'],
+  dubai:['Burj Khalifa At The Top at dusk — sundown + city lights in one visit|sight|#7250c4','Al Fahidi Historic District (Al Bastakiya) for wind-tower architecture|sight|#7250c4','Gold and Spice Souks in Deira via the abra water taxi|food|#c0457f','Dubai Frame for the split old/new city view — underrated and quick|sight|#7250c4','Ravi Restaurant in Satwa — legendary Pakistani for under $10|food|#c0457f','Desert safari with sandboarding and Bedouin dinner under the stars|activity|#208070'],
+  marrakech:['Djemaa el-Fna square at dusk — snake charmers, storytellers and smoke|sight|#7250c4','Majorelle Garden early morning before tour buses (blue walls + cacti)|sight|#7250c4','Souks of the medina: start at Souk Semmarine and get gloriously lost|activity|#208070','Hammam at Hammam de la Rose — a proper scrub and mint tea after|activity|#208070','Riad rooftop dinner for tagine with the medina skyline and minaret calls|food|#c0457f','Day trip to the Atlas Mountains: Imlil village and Berber trail|activity|#208070'],
+  'cape town':['Table Mountain cable car at 9 am — check the cloud; webcam on website|sight|#7250c4','Boulders Beach penguin colony south of Simon\'s Town|sight|#7250c4','V&A Waterfront for craft beer at Devil\'s Peak Brewery|food|#c0457f','Cape Winelands day drive: Franschhoek and Stellenbosch with tastings|food|#c0457f','Robben Island boat and tour — emotionally powerful; book ahead|sight|#7250c4','Chapman\'s Peak coastal drive at sunset — one of the world\'s best drives|activity|#208070'],
+  bangkok:['Grand Palace and Wat Phra Kaew at opening — cover shoulders and knees|sight|#7250c4','Chatuchak Weekend Market early Saturday for vintage and street food|food|#c0457f','Chao Phraya river at dusk on the local orange-flag ferry|activity|#208070','Pad see ew and papaya salad at Polo Fried Chicken in Lumphini|food|#c0457f','Rooftop bars: Vertigo at Banyan Tree or Sky Bar at Lebua State Tower|activity|#208070','Wat Arun (Temple of Dawn) at golden hour — cross from the main pier|sight|#7250c4'],
+  'mexico city':['Frida Kahlo Museum (Casa Azul) in Coyoacán — book weeks ahead|sight|#7250c4','Mercado de Jamaica at dawn for flowers, carnitas and fresh juice|food|#c0457f','Teotihuacán pyramids at sunrise before heat and crowds build|sight|#7250c4','Contramar for tuna tostadas and the house red-and-green tuna|food|#c0457f','Xochimilco trajinera boat cruise on the flower-canal waterways|activity|#208070','Lucha libre wrestling at Arena México — supremely festive atmosphere|activity|#208070']
+};
+
+function getLPRecs(destination) {
+  if (!destination) return [];
+  const lower = destination.toLowerCase();
+  for (const [key, recs] of Object.entries(LP_RECS)) {
+    if (lower.includes(key)) return recs.map(r => {
+      const [desc, cat, col] = r.split('|');
+      return { desc, cat, col };
+    });
+  }
+  return [];
+}
+
+function addDiscoverToItinerary(btn) {
+  const tripId   = btn.dataset.trip;
+  const name     = btn.dataset.name;
+  const category = btn.dataset.cat;
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  if (!trip.itinerary) trip.itinerary = [];
+  const date = trip.startDate || new Date().toISOString().slice(0,10);
+  const catKey = Object.entries(ITIN_CATS).find(([,v]) => v.label === category)?.[0] || 'sightseeing';
+  trip.itinerary.push({ id: uid(), date, time: '', title: name, category: catKey, notes: '' });
+  saveState();
+  btn.textContent = '✓ Added';
+  btn.style.background = 'rgba(32,128,112,.15)';
+  btn.style.color = 'var(--teal)';
+  btn.style.borderColor = 'var(--teal)';
+  btn.disabled = true;
+}
+
+// ── Location typeahead ─────────────────────────────────────
+let _taTimer;
+let _selectedLoc = {};
+
+function locationInput(el) {
+  clearTimeout(_taTimer);
+  const q = el.value.trim();
+  const dd = document.getElementById('ta-dd');
+  if (!dd || q.length < 2) { if (dd) dd.style.display = 'none'; return; }
+  _taTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=1`);
+      const data = await res.json();
+      if (!data.length) { dd.style.display = 'none'; return; }
+      dd.innerHTML = data.map(d => {
+        const main = d.name || d.display_name.split(',')[0];
+        const sub = d.display_name.split(',').slice(1,3).join(',').trim();
+        return `<div class="ta-item" onclick="selectLocation('${esc(d.display_name)}','${d.lat}','${d.lon}','${esc(main)}')">
+          <div class="ta-main">${esc(main)}</div>
+          ${sub ? `<div class="ta-sub">${esc(sub)}</div>` : ''}
+        </div>`;
+      }).join('');
+      dd.style.display = 'block';
+    } catch(e) { /* silently ignore network errors */ }
+  }, 320);
+}
+
+function selectLocation(displayName, lat, lon, shortName) {
+  _selectedLoc = { displayName, lat, lon, shortName };
+  const inp = document.getElementById('m-dest');
+  if (inp) inp.value = shortName;
+  const dd = document.getElementById('ta-dd');
+  if (dd) dd.style.display = 'none';
+}
+
+let _stopTaTimer;
+function stopLocationInput(el) {
+  clearTimeout(_stopTaTimer);
+  const q = el.value.trim();
+  const dd = document.getElementById('stop-dest-dd');
+  if (!dd || q.length < 2) { if (dd) dd.style.display = 'none'; return; }
+  _stopTaTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=1`);
+      const data = await res.json();
+      if (!data.length) { dd.style.display = 'none'; return; }
+      dd.innerHTML = data.map(d => {
+        const main = d.name || d.display_name.split(',')[0];
+        const sub = d.display_name.split(',').slice(1,3).join(',').trim();
+        return `<div class="ta-item" onclick="selectStopLocation('${esc(main)}')">
+          <div class="ta-main">${esc(main)}</div>
+          ${sub ? `<div class="ta-sub">${esc(sub)}</div>` : ''}
+        </div>`;
+      }).join('');
+      dd.style.display = 'block';
+    } catch(e) { /* silently ignore */ }
+  }, 320);
+}
+
+function selectStopLocation(name) {
+  const inp = document.getElementById('stop-dest');
+  if (inp) inp.value = name;
+  const dd = document.getElementById('stop-dest-dd');
+  if (dd) dd.style.display = 'none';
+}
+
+// ── renderTravel ───────────────────────────────────────────
+function renderTravel() {
+  if (!state.trips) state.trips = [];
+  const grid = document.getElementById('trips-grid');
+  const totalEl = document.getElementById('trip-count-total');
+  const upcomingEl = document.getElementById('trip-count-upcoming');
+  const countdownEl = document.getElementById('travel-countdown');
+  if (!grid) return;
+
+  const now = new Date();
+  const upcoming = state.trips.filter(t => t.startDate && new Date(t.startDate+'T00:00:00') >= now && t.status !== 'completed');
+  if (totalEl) totalEl.textContent = state.trips.length;
+  if (upcomingEl) upcomingEl.textContent = upcoming.length;
+
+  if (countdownEl) {
+    const next = [...upcoming].sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
+    if (next) {
+      const label = next.name || next.destination;
+      const days = Math.ceil((new Date(next.startDate+'T00:00:00') - now) / 86400000);
+      countdownEl.innerHTML = days === 0
+        ? `<div class="countdown-chip">✈️ ${esc(label)} starts today!</div>`
+        : `<div class="countdown-chip">✈️ ${esc(label)} in ${days} day${days!==1?'s':''}</div>`;
+    } else { countdownEl.innerHTML = ''; }
+  }
+
+  grid.innerHTML = state.trips.map(t => {
+    const whoLabel = t.who==='a' ? state.names.a : t.who==='b' ? state.names.b : state.names.a+' & '+state.names.b;
+    const sd = t.startDate ? new Date(t.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const ed = t.endDate ? new Date(t.endDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const dateStr = sd && ed ? sd+' – '+ed : sd || 'Dates TBD';
+    const packed = (t.packing||[]).filter(p=>p.done).length;
+    const packTotal = (t.packing||[]).length;
+    const itin = (t.itinerary||[]).length;
+    return `<div class="trip-card" onclick="openModal('tripdetail','${t.id}')">
+      <div class="trip-hero" style="position:relative;height:96px;overflow:hidden">
+        <div style="position:absolute;inset:0;background:${TRIP_GRADIENTS[t.status]||TRIP_GRADIENTS.planning}"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px">
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3)">${esc(t.name || t.destination)}</div>
+          ${t.name ? `<div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:1px">${esc(t.destination)}</div>` : ''}
+        </div>
+      </div>
+      <div class="trip-body">
+        <div class="trip-dates">${dateStr}</div>
+        <div class="trip-foot">
+          <span class="trip-status s-${t.status}">${t.status}</span>
+          <span class="trip-who">${esc(whoLabel)}</span>
+          ${itin ? `<span style="font-size:10px;color:var(--text-2)">${itin} stops</span>` : ''}
+          ${packTotal && !itin ? `<span style="font-size:10px;color:var(--text-2)">${packed}/${packTotal} packed</span>` : ''}
+        </div>
+      </div>
+      <button class="trip-del-btn" onclick="deleteTrip('${t.id}',event)">✕</button>
+    </div>`;
+  }).join('') + `<div class="trip-add-card" onclick="openModal('trip')">
+    <div class="trip-add-icon">+</div>
+    <div class="trip-add-label">Plan a trip</div>
+  </div>`;
+}
+
+function deleteTrip(id, e) {
+  e.stopPropagation();
+  state.trips = state.trips.filter(t => t.id !== id);
+  saveState(); renderTravel();
+}
+
+// ── Trip Stops ─────────────────────────────────────────────
+function renderTripStops(tripId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  const el = document.getElementById('trip-stops');
+  if (!el || !trip) return;
+  const stops = trip.stops || [];
+  if (!stops.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text-3);padding:4px 0">No stops added yet</div>';
+    return;
+  }
+  el.innerHTML = stops.map(s => `
+    <div class="stop-row">
+      <div style="flex:1">
+        <div class="stop-dest">${esc(s.destination)}</div>
+        <div class="stop-dates">${fmtMemDate(s.startDate)} – ${fmtMemDate(s.endDate)}</div>
+      </div>
+      <button class="stop-del" onclick="deleteTripStop('${tripId}','${s.id}')" title="Remove stop">✕</button>
+    </div>`).join('');
+}
+
+function showStopForm(tripId) {
+  const form = document.getElementById('trip-stop-form');
+  if (!form) return;
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  if (form.style.display === 'block') {
+    const destEl = document.getElementById('stop-dest');
+    if (destEl) destEl.focus();
+  }
+}
+
+function saveTripStop(tripId) {
+  const dest = (document.getElementById('stop-dest')?.value || '').trim();
+  const start = document.getElementById('stop-start')?.value || '';
+  const end = document.getElementById('stop-end')?.value || '';
+  if (!dest) { alert('Please enter a destination.'); return; }
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  if (!trip.stops) trip.stops = [];
+  trip.stops.push({ id: uid(), destination: dest, startDate: start, endDate: end });
+  saveState();
+  document.getElementById('trip-stop-form').style.display = 'none';
+  document.getElementById('stop-dest').value = '';
+  document.getElementById('stop-start').value = '';
+  document.getElementById('stop-end').value = '';
+  renderTripStops(tripId);
+  renderCalendar();
+}
+
+function deleteTripStop(tripId, stopId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  trip.stops = (trip.stops || []).filter(s => s.id !== stopId);
+  saveState();
+  renderTripStops(tripId);
+  renderCalendar();
+}
+
+// ── Accommodation ──────────────────────────────────────────
+function renderTripAccom(tripId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  const el = document.getElementById('trip-accom-list');
+  if (!el || !trip) return;
+  const list = trip.accommodations || [];
+  if (!list.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text-3);padding:4px 0">No accommodation added yet</div>';
+    return;
+  }
+  el.innerHTML = list.map(a => {
+    const ci = a.checkIn  ? fmtMemDate(a.checkIn)  : '';
+    const co = a.checkOut ? fmtMemDate(a.checkOut) : '';
+    const dates = ci || co ? `${ci}${ci && co ? ' – ' : ''}${co}` : '';
+    return `<div class="stop-row">
+      <div style="flex:1;min-width:0">
+        <div class="stop-dest">${a.link
+          ? `<a href="${esc(a.link)}" target="_blank" rel="noopener" style="color:var(--lav);text-decoration:none" onclick="event.stopPropagation()">${esc(a.name)} ↗</a>`
+          : esc(a.name)}</div>
+        ${dates ? `<div class="stop-dates">${dates}</div>` : ''}
+      </div>
+      <button class="stop-del" onclick="deleteAccom('${tripId}','${a.id}')" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function showAccomForm(tripId) {
+  const form = document.getElementById('trip-accom-form');
+  if (!form) return;
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  if (form.style.display === 'block') document.getElementById('accom-name')?.focus();
+}
+
+function saveAccom(tripId) {
+  const name = (document.getElementById('accom-name')?.value || '').trim();
+  if (!name) { document.getElementById('accom-name')?.focus(); return; }
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  if (!trip.accommodations) trip.accommodations = [];
+  trip.accommodations.push({
+    id: uid(), name,
+    checkIn:  document.getElementById('accom-checkin')?.value  || '',
+    checkOut: document.getElementById('accom-checkout')?.value || '',
+    link:     document.getElementById('accom-link')?.value.trim() || ''
+  });
+  saveState();
+  document.getElementById('trip-accom-form').style.display = 'none';
+  ['accom-name','accom-checkin','accom-checkout','accom-link'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  renderTripAccom(tripId);
+}
+
+function deleteAccom(tripId, accomId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  trip.accommodations = (trip.accommodations || []).filter(a => a.id !== accomId);
+  saveState(); renderTripAccom(tripId);
+}
+
+// ── Smart Discover ─────────────────────────────────────────
+const OVERPASS_CATS = {
+  attraction: { label: 'Attraction', icon: '🏛', col: 'var(--lav)' },
+  museum:     { label: 'Museum',     icon: '🖼', col: 'var(--lav)' },
+  viewpoint:  { label: 'Viewpoint',  icon: '🌅', col: 'var(--gold)' },
+  castle:     { label: 'Castle',     icon: '🏰', col: 'var(--rose)' },
+  ruins:      { label: 'Historic',   icon: '🏺', col: 'var(--rose)' },
+  monument:   { label: 'Monument',   icon: '🗿', col: 'var(--rose)' },
+  restaurant: { label: 'Restaurant', icon: '🍽', col: 'var(--teal)' },
+  cafe:       { label: 'Café',       icon: '☕', col: 'var(--teal)' },
+  bar:        { label: 'Bar',        icon: '🍸', col: 'var(--teal)' },
+  park:       { label: 'Park',       icon: '🌿', col: '#6abf69' },
+  garden:     { label: 'Garden',     icon: '🌸', col: '#6abf69' },
+  gallery:    { label: 'Gallery',    icon: '🎨', col: 'var(--lav)' },
+};
+
+async function loadDiscover(tripId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  const el = document.getElementById('discover-body');
+  if (!el || !trip) return;
+
+  if (!trip.lat || !trip.lon) {
+    el.innerHTML = `<div style="color:var(--text-3);font-size:13px;padding:12px 0">No coordinates stored for this destination — re-add the trip using the typeahead search to enable smart recommendations.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+        <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">Lonely Planet →</a>
+        <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">TripAdvisor →</a>
+        <a class="lp-link" href="https://www.google.com/maps/search/${encodeURIComponent(trip.destination)}+things+to+do" target="_blank" rel="noopener">Google Maps →</a>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--text-2);font-size:13px">Loading recommendations…</div>';
+
+  try {
+    const q = `[out:json][timeout:15];(node["tourism"~"attraction|museum|gallery|viewpoint|monument|castle|ruins|artwork"](around:6000,${trip.lat},${trip.lon});node["amenity"~"restaurant|cafe|bar"](around:4000,${trip.lat},${trip.lon});node["leisure"~"park|garden|nature_reserve"](around:6000,${trip.lat},${trip.lon});node["historic"~"monument|memorial|castle|ruins"](around:6000,${trip.lat},${trip.lon}););out 30;`;
+    const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(q)}`);
+    const data = await res.json();
+
+    const seen = new Set();
+    const items = data.elements
+      .filter(e => e.tags?.name)
+      .filter(e => { if (seen.has(e.tags.name)) return false; seen.add(e.tags.name); return true; })
+      .slice(0, 24)
+      .map(e => {
+        const t = e.tags;
+        const type = t.tourism || t.amenity || t.leisure || t.historic || 'attraction';
+        const cat = OVERPASS_CATS[type] || OVERPASS_CATS.attraction;
+        const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(t.name)}/@${e.lat},${e.lon},15z`;
+        return { name: t.name, cat, mapsUrl };
+      });
+
+    if (!items.length) throw new Error('no results');
+
+    const grouped = {};
+    items.forEach(i => {
+      const g = i.cat.label;
+      if (!grouped[g]) grouped[g] = [];
+      grouped[g].push(i);
+    });
+
+    el.innerHTML = `
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:10px">Near ${esc(trip.destination)}</div>
+      ${Object.entries(grouped).map(([grp, its]) => `
+        <div style="margin-bottom:14px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px">${its[0].cat.icon} ${grp}</div>
+          ${its.map(i => `
+            <div class="lp-rec-item" style="margin-bottom:6px">
+              <div class="lp-dot" style="background:${i.cat.col}"></div>
+              <div style="flex:1;min-width:0">
+                <div class="lp-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(i.name)}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+                <button class="disc-add-btn" data-trip="${tripId}" data-name="${esc(i.name)}" data-cat="${esc(i.cat.label)}" onclick="addDiscoverToItinerary(this)">+ Itinerary</button>
+                <a href="${i.mapsUrl}" target="_blank" rel="noopener" style="font-size:10px;color:var(--lav);text-decoration:none" onclick="event.stopPropagation()">Maps →</a>
+              </div>
+            </div>`).join('')}
+        </div>`).join('')}
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">Lonely Planet →</a>
+        <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">TripAdvisor →</a>
+      </div>`;
+  } catch {
+    el.innerHTML = `<div style="color:var(--text-3);font-size:13px;padding:10px 0">Couldn't load recommendations — check your connection and try again.</div>
+      <button class="btn-add" style="margin-top:8px" onclick="loadDiscover('${tripId}')">Retry</button>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+        <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">Lonely Planet →</a>
+        <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${encodeURIComponent(trip.destination)}" target="_blank" rel="noopener">TripAdvisor →</a>
+        <a class="lp-link" href="https://www.google.com/maps/search/${encodeURIComponent(trip.destination)}+things+to+do" target="_blank" rel="noopener">Google Maps →</a>
+      </div>`;
+  }
+}
+
+// ── Packing ────────────────────────────────────────────────
+function addPackItem(tripId) {
+  const input = document.getElementById('pack-add-input');
+  if (!input || !input.value.trim()) return;
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  if (!trip.packing) trip.packing = [];
+  trip.packing.push({ id: uid(), text: input.value.trim(), done: false });
+  input.value = '';
+  saveState(); renderPackList(tripId); renderTravel();
+}
+
+function togglePackItem(tripId, itemId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  const item = (trip.packing||[]).find(p => p.id === itemId);
+  if (item) { item.done = !item.done; saveState(); renderPackList(tripId); renderTravel(); }
+}
+
+function deletePackItem(tripId, itemId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  trip.packing = (trip.packing||[]).filter(p => p.id !== itemId);
+  saveState(); renderPackList(tripId); renderTravel();
+}
+
+function renderPackList(tripId) {
+  const el = document.getElementById('pack-list');
+  if (!el) return;
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  const items = trip.packing || [];
+  const done = items.filter(p=>p.done).length;
+  const hdr = document.getElementById('pack-count');
+  if (hdr) hdr.textContent = done + '/' + items.length + ' packed';
+  el.innerHTML = items.length ? items.map(p => `
+    <div class="pack-item ${p.done?'packed':''}" onclick="togglePackItem('${tripId}','${p.id}')">
+      <div class="cb"><span class="cb-chk">${p.done?'✓':''}</span></div>
+      <div class="pack-text">${esc(p.text)}</div>
+      <button class="pack-del" onclick="event.stopPropagation();deletePackItem('${tripId}','${p.id}')">✕</button>
+    </div>`).join('')
+    : '<div style="color:var(--text-3);font-size:12px;padding:6px 0">Nothing packed yet</div>';
+}
+
+// ── Itinerary ──────────────────────────────────────────────
+let _itinOpenDay = null;
+let _itinEditId = null;
+
+function showItinForm(dateStr) {
+  _itinOpenDay = _itinOpenDay === dateStr ? null : dateStr;
+  // toggle form visibility without full re-render
+  document.querySelectorAll('.itin-add-form').forEach(f => {
+    f.style.display = f.dataset.date === dateStr && _itinOpenDay === dateStr ? 'block' : 'none';
+  });
+  document.querySelectorAll('.itin-add-btn').forEach(b => {
+    b.textContent = b.dataset.date === dateStr && _itinOpenDay === dateStr ? '− Cancel' : '+ Add activity';
+  });
+  if (_itinOpenDay) {
+    const t = document.getElementById('itin-title-' + dateStr);
+    if (t) t.focus();
+  }
+}
+
+function addItineraryItem(tripId, dateStr) {
+  const titleEl = document.getElementById('itin-title-' + dateStr);
+  const timeEl  = document.getElementById('itin-time-' + dateStr);
+  const catEl   = document.getElementById('itin-cat-' + dateStr);
+  const notesEl = document.getElementById('itin-note-' + dateStr);
+  if (!titleEl || !titleEl.value.trim()) return;
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  if (!trip.itinerary) trip.itinerary = [];
+  trip.itinerary.push({
+    id: uid(), date: dateStr,
+    time: timeEl ? timeEl.value : '',
+    title: titleEl.value.trim(),
+    category: catEl ? catEl.value : 'activity',
+    notes: notesEl ? notesEl.value.trim() : ''
+  });
+  _itinOpenDay = null;
+  saveState(); renderItinerary(tripId); renderTravel();
+}
+
+function deleteItineraryItem(tripId, itemId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  trip.itinerary = (trip.itinerary||[]).filter(i => i.id !== itemId);
+  saveState(); renderItinerary(tripId); renderTravel();
+}
+
+function editItineraryItem(itemId, tripId) {
+  _itinEditId = itemId;
+  _itinOpenDay = null;
+  renderItinerary(tripId);
+  setTimeout(() => {
+    const t = document.getElementById('itin-edit-title-' + itemId);
+    if (t) { t.focus(); t.select(); }
+  }, 0);
+}
+
+function saveItineraryEdit(tripId, itemId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  const item = (trip.itinerary||[]).find(i => i.id === itemId);
+  if (!item) return;
+  const title = document.getElementById('itin-edit-title-' + itemId)?.value.trim();
+  if (!title) return;
+  item.title    = title;
+  item.time     = document.getElementById('itin-edit-time-' + itemId)?.value || '';
+  item.notes    = document.getElementById('itin-edit-note-' + itemId)?.value.trim() || '';
+  item.category = document.getElementById('itin-edit-cat-'  + itemId)?.value || 'activity';
+  _itinEditId = null;
+  saveState(); renderItinerary(tripId);
+}
+
+function renderItinerary(tripId) {
+  const el = document.getElementById('itin-body');
+  if (!el) return;
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+
+  if (!trip.startDate || !trip.endDate) {
+    el.innerHTML = '<div class="itin-empty">Set travel dates in the Details tab to build your itinerary.</div>';
+    return;
+  }
+
+  const start = new Date(trip.startDate + 'T00:00:00');
+  const end   = new Date(trip.endDate   + 'T00:00:00');
+  const days  = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1))
+    days.push(new Date(d).toISOString().slice(0,10));
+
+  el.innerHTML = days.map((ds, i) => {
+    const items = (trip.itinerary||[]).filter(x => x.date === ds).sort((a,b) => (a.time||'').localeCompare(b.time||''));
+    const label = new Date(ds+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return `<div class="itin-day">
+      <div class="itin-day-head">
+        <span class="itin-day-label">Day ${i+1}</span>
+        <span class="itin-day-date">${label}</span>
+      </div>
+      <div class="itin-items">${items.length ? items.map(it => {
+        const c = ITIN_CATS[it.category] || ITIN_CATS.other;
+        if (_itinEditId === it.id) {
+          return `<div class="itin-item" style="flex-direction:column;align-items:stretch;gap:8px">
+            <div class="itin-quick-add">
+              <input class="gi" type="text" id="itin-edit-time-${it.id}" value="${esc(it.time||'')}" placeholder="10:00 AM" style="font-size:12px;padding:7px 8px">
+              <input class="gi" id="itin-edit-title-${it.id}" value="${esc(it.title)}" style="font-size:12px" onkeydown="if(event.key==='Enter')saveItineraryEdit('${tripId}','${it.id}');if(event.key==='Escape'){_itinEditId=null;renderItinerary('${tripId}')}">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 90px;gap:6px">
+              <input class="gi" id="itin-edit-note-${it.id}" value="${esc(it.notes||'')}" placeholder="Notes (optional)" style="font-size:11px;padding:6px 10px">
+              <select class="gi" id="itin-edit-cat-${it.id}" style="font-size:11px;padding:6px 8px">
+                ${Object.entries(ITIN_CATS).map(([k,v])=>`<option value="${k}"${it.category===k?' selected':''}>${v.label}</option>`).join('')}
+              </select>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-save" style="flex:1;padding:7px" onclick="saveItineraryEdit('${tripId}','${it.id}')">Save</button>
+              <button class="btn-cancel" style="flex:1;padding:7px" onclick="_itinEditId=null;renderItinerary('${tripId}')">Cancel</button>
+            </div>
+          </div>`;
+        }
+        return `<div class="itin-item">
+          <span class="itin-time">${it.time||'—'}</span>
+          <span class="itin-dot" style="background:${c.col}"></span>
+          <div class="itin-info">
+            <div class="itin-title">${esc(it.title)}</div>
+            ${it.notes ? `<div class="itin-note">${esc(it.notes)}</div>` : ''}
+          </div>
+          <button class="itin-edit-btn" onclick="event.stopPropagation();editItineraryItem('${it.id}','${tripId}')" title="Edit">✎</button>
+          <button class="itin-del" onclick="event.stopPropagation();deleteItineraryItem('${tripId}','${it.id}')">✕</button>
+        </div>`;
+      }).join('') : `<div class="itin-empty" style="padding:4px 0">Nothing planned yet</div>`}</div>
+      <div class="itin-add-form" data-date="${ds}" style="display:${_itinOpenDay===ds?'block':'none'};margin-top:8px;background:var(--input-bg);border-radius:12px;padding:10px">
+        <div class="itin-quick-add" style="margin-bottom:6px">
+          <input class="gi" type="text" id="itin-time-${ds}" placeholder="10:00 AM" style="font-size:12px;padding:7px 8px">
+          <input class="gi" id="itin-title-${ds}" placeholder="Activity name…" style="font-size:12px" onkeydown="if(event.key==='Enter')addItineraryItem('${tripId}','${ds}');if(event.key==='Escape')showItinForm('${ds}')">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 90px;gap:6px;margin-bottom:8px">
+          <input class="gi" id="itin-note-${ds}" placeholder="Notes (optional)" style="font-size:11px;padding:6px 10px">
+          <select class="gi" id="itin-cat-${ds}" style="font-size:11px;padding:6px 8px">
+            ${Object.entries(ITIN_CATS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn-save" style="width:100%;padding:8px" onclick="addItineraryItem('${tripId}','${ds}')">Save</button>
+      </div>
+      <button class="itin-add-btn" data-date="${ds}" style="width:100%;margin-top:8px;padding:6px;font-size:11px;font-weight:700;border:1.5px dashed var(--glass-border-strong);border-radius:10px;background:transparent;color:var(--text-2);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--lav)';this.style.color='var(--lav)'" onmouseout="this.style.borderColor='var(--glass-border-strong)';this.style.color='var(--text-2)'" onclick="showItinForm('${ds}')">${_itinOpenDay===ds?'− Cancel':'+ Add activity'}</button>
+    </div>`;
+  }).join('');
+}
+
+function switchTripTab(tab, tripId) {
+  document.querySelectorAll('.m-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.m-tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.m-tab[data-tab="${tab}"]`)?.classList.add('active');
+  document.querySelector(`.m-tab-content[data-tab="${tab}"]`)?.classList.add('active');
+  if (tab === 'overview') { renderTripStops(tripId); renderTripAccom(tripId); }
+  if (tab === 'itinerary') renderItinerary(tripId);
+}
+
+// ── Recurring expenses ─────────────────────────────────────
+function recurCurrentYM() {
+  const n = new Date();
+  return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0');
+}
+
+function renderRecurring() {
+  if (!state.recurring) state.recurring = [];
+  const el = document.getElementById('recur-list');
+  const totalEl = document.getElementById('recur-monthly-total');
+  if (!el) return;
+
+  const monthly = state.recurring.reduce((s, r) => {
+    const m = r.frequency === 'weekly' ? r.amount * 52/12 : r.frequency === 'yearly' ? r.amount/12 : r.amount;
+    return s + m;
+  }, 0);
+  if (totalEl) totalEl.textContent = '$' + fmt(monthly);
+
+  if (!state.recurring.length) {
+    el.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:8px 0">No recurring expenses yet</div>';
+    return;
+  }
+
+  const ym = recurCurrentYM();
+  const monthLabel = new Date().toLocaleDateString('en-US', {month:'short'});
+
+  el.innerHTML = state.recurring.map(r => {
+    const paidName = r.paidBy === 'a' ? state.names.a : state.names.b;
+    const freqClass = 'freq-' + r.frequency;
+    const paidMonths = r.paidMonths || [];
+    const paidThisMonth = paidMonths.includes(ym);
+    const logControl = paidThisMonth
+      ? `<span class="recur-paid-badge">✓ ${monthLabel}</span>`
+      : `<button class="recur-log-btn" onclick="logRecurring('${r.id}')">Log ${monthLabel}</button>`;
+    return `<div class="recur-row">
+      <div class="exp-ico" style="background:${CAT_COLORS[r.cat]||'#aaa'}22">${CAT_ICONS[r.cat]||'💳'}</div>
+      <div class="exp-info">
+        <div class="exp-name">${esc(r.name)}</div>
+        <div class="exp-meta">${esc(paidName)} · ${r.cat}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+        <div style="text-align:right">
+          <div class="exp-amt">$${fmt(r.amount)}</div>
+          <span class="recur-freq ${freqClass}">${r.frequency}</span>
+        </div>
+        ${logControl}
+      </div>
+      <button class="recur-del" onclick="deleteRecurring('${r.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function logRecurring(id) {
+  const r = state.recurring.find(r => r.id === id);
+  if (!r) return;
+  const ym = recurCurrentYM();
+  if (!r.paidMonths) r.paidMonths = [];
+
+  // Add to expenses
+  const today = new Date().toISOString().slice(0,10);
+  state.expenses.push({ id: uid(), name: r.name, amount: r.amount, paidBy: r.paidBy, cat: r.cat, date: today, fromRecurring: true });
+
+  // Mark as paid this month
+  r.paidMonths.push(ym);
+
+  saveState(); renderExpenses();
+}
+
+function deleteRecurring(id) {
+  state.recurring = state.recurring.filter(r => r.id !== id);
+  saveState(); renderRecurring();
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
+function renderAll() {
+  updateNames();
+  renderHome();
+  renderCalendar();
+  renderVault();
+  renderTravel();
+  renderSound();
+  renderLists();
+  renderExpenses();
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// shake animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+  @keyframes todayPulse{0%,100%{box-shadow:0 0 0 0 rgba(196,181,244,.28)}50%{box-shadow:0 0 0 6px rgba(196,181,244,0)}}
+  .cal-day.today{animation:todayPulse 3s ease-in-out infinite}
+`;
+document.head.appendChild(style);
+
+loadState();
+initTheme();
+initCal();
+renderAll();
+</script>
+</body>
+</html>
