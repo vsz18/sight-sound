@@ -1552,23 +1552,23 @@ function renderHome() {
       const dateStr = sd ? sd.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + (ed ? ' – '+ed.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '') : 'Dates TBD';
       const grad = TRIP_GRADIENTS[next.status] || TRIP_GRADIENTS.planning;
       tripsEl.innerHTML = `
-        <div style="border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;height:64px">
+        <div onclick="openTripPage('${next.id}');event.stopPropagation()" style="border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;min-height:60px;cursor:pointer">
           <div style="position:absolute;inset:0;background:${grad};opacity:.75"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between;padding:8px 11px">
-            <div>
-              <div style="font-family:'Fraunces',serif;font-size:14px;color:#fff;font-weight:400;text-shadow:0 1px 3px rgba(0,0,0,.3)">${esc(next.name||next.destination)}</div>
-              ${next.name ? `<div style="font-size:9px;color:rgba(255,255,255,.65)">${esc(next.destination)}</div>` : ''}
+          <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between;gap:6px;padding:8px 11px">
+            <div style="min-width:0;flex:1">
+              <div style="font-family:'Fraunces',serif;font-size:14px;color:#fff;font-weight:400;text-shadow:0 1px 3px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.name||next.destination)}</div>
+              ${next.name ? `<div style="font-size:9px;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.destination)}</div>` : ''}
             </div>
-            ${countdownStr ? `<div style="font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.28);padding:3px 8px;border-radius:20px">${countdownStr}</div>` : ''}
+            ${countdownStr ? `<div style="font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.28);padding:3px 8px;border-radius:20px;flex-shrink:0">${countdownStr}</div>` : ''}
           </div>
         </div>
         <div style="font-size:10px;color:var(--text-2);margin-bottom:${rest.length?'8px':'0'}">${dateStr}</div>
         ${rest.map(t => {
           const tsd = t.startDate ? new Date(t.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'TBD';
-          return `<div class="dc-row">
+          return `<div class="dc-row" onclick="openTripPage('${t.id}');event.stopPropagation()" style="cursor:pointer">
             <div class="dc-dot" style="background:${(TRIP_GRADIENTS[t.status]||'').split(',')[1]||'var(--lav)'}"></div>
-            <div class="dc-row-text">${esc(t.name||t.destination)}</div>
-            <div class="dc-row-sub">${tsd}</div>
+            <div class="dc-row-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.name||t.destination)}</div>
+            <div class="dc-row-sub" style="flex-shrink:0">${tsd}</div>
           </div>`;
         }).join('')}
       `;
