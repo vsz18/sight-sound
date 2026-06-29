@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: av-for-life
+    name: sight-sound
     runtime: static
     staticPublishPath: .
     headers:
