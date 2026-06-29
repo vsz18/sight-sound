@@ -2720,9 +2720,11 @@ function importData(input) {
       if (dump['ss-theme']) localStorage.setItem('ss-theme', dump['ss-theme']);
       if (dump[WIDGET_HIDE_KEY]) localStorage.setItem(WIDGET_HIDE_KEY, dump[WIDGET_HIDE_KEY]);
       closeModal();
-      loadState();
-      initTheme();
-      renderAll();
+      loadState().then(() => {
+        pushToDB();
+        initTheme();
+        renderAll();
+      });
     } catch(err) {
       alert('Could not read file — make sure it\'s a valid Sight & Sound export.');
     }
