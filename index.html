@@ -394,6 +394,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 .modal-bg.open{opacity:1;pointer-events:all}
 .modal{
   width:420px;max-width:92vw;max-height:90vh;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
   background:var(--modal-bg);backdrop-filter:blur(32px);
   border:1px solid var(--glass-border-strong);border-radius:22px;padding:26px;
   transform:scale(.95) translateY(12px);transition:transform .22s
@@ -790,6 +791,16 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 
   /* Event list */
   .ev-bar{height:28px}
+
+  /* Modal → bottom sheet */
+  .modal-bg{align-items:flex-end}
+  .modal{
+    width:100%;max-width:100%;max-height:85dvh;
+    border-radius:22px 22px 0 0;padding:20px 16px 32px;
+    transform:translateY(100%);transition:transform .28s cubic-bezier(.32,0,.67,0)
+  }
+  .modal-bg.open .modal{transform:translateY(0)}
+  .modal.wide{width:100%;max-width:100%}
 }
 </style>
 </head>
