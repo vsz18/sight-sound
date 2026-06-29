@@ -737,11 +737,11 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 
 /* responsive */
 @media(max-width:960px){
-  .sight-layout,.sound-layout,.ledger-layout{grid-template-columns:1fr}
+  .sight-layout,.sound-layout,.ledger-layout{grid-template-columns:1fr;gap:12px}
 }
 @media(max-width:640px){
   .sidebar{display:none}
-  .main{padding:18px 14px 100px}
+  .main{padding:14px 12px 100px}
   .bnav{
     display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;
     background:var(--bnav-bg);backdrop-filter:blur(22px);
@@ -756,8 +756,40 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   .bn.active{color:var(--lav)}
   .bn svg{width:20px;height:20px;stroke-width:1.6}
   .fab{bottom:72px;right:16px}
-  .exp-stats{grid-template-columns:repeat(3,1fr)}
-  .ph-title{font-size:26px}
+
+  /* Panel header */
+  .ph{margin-bottom:16px}
+  .ph-title{font-size:22px}
+
+  /* Cards */
+  .gc{padding:14px}
+  .gc-sm{padding:12px}
+
+  /* Calendar */
+  .cal-head{margin-bottom:14px}
+  .cal-month{font-size:18px}
+  .cal-grid{gap:1px}
+  .cal-dl{padding:5px 0;font-size:9px;letter-spacing:.3px}
+  .cal-day{border-radius:7px;font-size:11px}
+  /* Trip chips: collapse to a thin colored bar — text too small to read */
+  .trip-chip{font-size:0;line-height:0;padding:0;height:3px;border-radius:2px;margin-bottom:1px}
+
+  /* Move day strip */
+  .day-strip{gap:4px;margin-bottom:16px}
+  .day-chip{padding:8px 2px}
+  .day-chip-lbl{font-size:7px;letter-spacing:1px}
+  .day-chip-n{font-size:12px}
+
+  /* Finances */
+  .exp-stats{grid-template-columns:repeat(3,1fr);gap:6px}
+  .exp-stat{padding:10px 8px}
+  .exp-stat-v{font-size:18px}
+
+  /* Trips */
+  .trips-grid,.past-trips-grid{grid-template-columns:1fr 1fr;gap:10px}
+
+  /* Event list */
+  .ev-bar{height:28px}
 }
 </style>
 </head>
