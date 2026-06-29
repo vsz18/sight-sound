@@ -438,10 +438,13 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 .fab:hover{background:rgba(196,181,244,.32);transform:scale(1.05)}
 
 /* ===== HOME DASHBOARD ===== */
-.home-greeting{margin-bottom:28px}
+.home-greeting{margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between}
+.home-greeting-text{flex:1}
 .home-date{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px}
 .home-hi{font-family:'Fraunces',serif;font-size:38px;font-weight:400;color:var(--text-1);line-height:1.1}
 .home-hi em{font-style:italic;color:var(--lav)}
+.mob-settings-btn{display:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text-2);cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;margin-top:4px;transition:all .2s}
+.mob-settings-btn:hover{background:var(--glass-bg-hover);color:var(--text-1)}
 
 .dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;grid-auto-flow:dense}
 .dash-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:18px;cursor:pointer;transition:all .2s;position:relative}
@@ -758,9 +761,38 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   .bn svg{width:20px;height:20px;stroke-width:1.6}
   .fab{bottom:72px;right:16px}
 
-  /* Panel header */
-  .ph{margin-bottom:16px}
-  .ph-title{font-size:22px}
+  /* Panel header — sticky frosted bar */
+  .ph{
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;gap:10px;
+    margin:-14px -12px 20px;
+    padding:13px 16px;
+    background:var(--bnav-bg);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-bottom:1px solid var(--glass-border);
+  }
+  .ph-eye{
+    font-size:9px;letter-spacing:1.5px;
+    padding:3px 10px;border-radius:20px;
+    background:rgba(196,181,244,.14);color:var(--lav);
+    border:1px solid rgba(196,181,244,.22);
+    margin-bottom:0;flex-shrink:0;
+  }
+  .ph-title{font-size:17px;margin:0;line-height:1.2}
+
+  /* Home header */
+  .home-greeting{
+    position:sticky;top:0;z-index:10;
+    margin:-14px -12px 20px;
+    padding:13px 16px;
+    background:var(--bnav-bg);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-bottom:1px solid var(--glass-border);
+    margin-bottom:20px;
+  }
+  .home-date{margin-bottom:2px;font-size:10px;letter-spacing:2px}
+  .home-hi{font-size:22px}
+  .mob-settings-btn{display:flex}
 
   /* Cards */
   .gc{padding:14px}
@@ -855,8 +887,13 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
     <!-- HOME DASHBOARD -->
     <section class="panel active" id="panel-home">
       <div class="home-greeting">
-        <div class="home-date" id="home-date"></div>
-        <div class="home-hi" id="home-hi">Good morning, <em>Victoria</em></div>
+        <div class="home-greeting-text">
+          <div class="home-date" id="home-date"></div>
+          <div class="home-hi" id="home-hi">Good morning, <em>Victoria</em></div>
+        </div>
+        <button class="mob-settings-btn" onclick="openSettings()" aria-label="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
       </div>
 
       <div class="dash-grid" id="dash-grid"></div>
