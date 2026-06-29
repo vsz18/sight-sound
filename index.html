@@ -1098,18 +1098,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 // ============================================================
 const STORE_KEY = 'sight-sound-v2';
 
-// ── GitHub sync ──
-const GH_OWNER = 'vsz18';
-const GH_REPO  = 'sight-sound';
-const GH_FILE  = 'data.json';
-let ghSha       = null;
-let ghSaveTimer = null;
-function ghToken() {
-  const stored = localStorage.getItem('ss-gh-token') || '';
-  if (stored) return stored;
-  const baked = '__GH_TOKEN__';          // replaced at Docker build time by Render
-  return baked.includes('__') ? '' : baked;
-}
+let dbSaveTimer = null;
 let state = {
   names: { a: 'Victoria', b: 'Alan' },
   events: [],
@@ -1182,75 +1171,43 @@ function applyMigrations() {
 }
 
 async function loadState() {
-  let ghEmpty = false;
-  if (!ghToken()) {
-    // No token yet — fall straight through to localStorage
-    try {
-      const s = localStorage.getItem(STORE_KEY);
-      if (s) state = { ...state, ...JSON.parse(s) };
-    } catch(e) {}
-    applyMigrations();
-    return;
-  }
+  // Try database first
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
-      { headers: { 'Authorization': `Bearer ${ghToken()}`, 'Accept': 'application/vnd.github+json' } }
-    );
+    const res = await fetch('/api/state');
     if (res.ok) {
-      const json = await res.json();
-      ghSha = json.sha;
-      const raw    = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
-      const loaded = JSON.parse(raw);
+      const loaded = await res.json();
       if (Object.keys(loaded).length > 0) {
         state = { ...state, ...loaded };
         applyMigrations();
-        localStorage.setItem(STORE_KEY, JSON.stringify(state));
         return;
       }
-      ghEmpty = true;
+      // DB is empty — push local data up
+      setTimeout(pushToDB, 500);
     }
   } catch(e) {}
 
-  // Fall back to localStorage
+  // Fall back to localStorage (local dev without a server)
   try {
     const s = localStorage.getItem(STORE_KEY);
     if (s) state = { ...state, ...JSON.parse(s) };
   } catch(e) {}
 
   applyMigrations();
-
-  // If GitHub file was empty, push local data up immediately
-  if (ghEmpty) setTimeout(pushToGitHub, 500);
 }
 
 function saveState() {
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
-  clearTimeout(ghSaveTimer);
-  ghSaveTimer = setTimeout(pushToGitHub, 2000);
+  clearTimeout(dbSaveTimer);
+  dbSaveTimer = setTimeout(pushToDB, 1500);
 }
 
-async function pushToGitHub() {
+async function pushToDB() {
   try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
-    const body = { message: 'sync', content };
-    if (ghSha) body.sha = ghSha;
-    const res = await fetch(
-      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
-      { method: 'PUT',
-        headers: { 'Authorization': `Bearer ${ghToken()}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(body) }
-    );
-    if (res.ok) {
-      ghSha = (await res.json()).content.sha;
-    } else if (res.status === 409) {
-      // SHA conflict — fetch latest SHA and retry once
-      const get = await fetch(
-        `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
-        { headers: { 'Authorization': `Bearer ${ghToken()}`, 'Accept': 'application/vnd.github+json' } }
-      );
-      if (get.ok) { ghSha = (await get.json()).sha; pushToGitHub(); }
-    }
+    await fetch('/api/state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state)
+    });
   } catch(e) {}
 }
 
@@ -2276,8 +2233,7 @@ function openModal(mode, extra) {
       <div class="mf" style="margin-top:24px">
         <div class="ml">Data</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-          <button class="btn-add" style="width:100%;padding:10px;font-size:12px;border-radius:10px" onclick="closeModal();showTokenSetup()">&#128279; Update sync token</button>
-          <button class="btn-add" style="width:100%;padding:10px;font-size:12px;border-radius:10px" onclick="exportData()">&#8681; Export all data</button>
+<button class="btn-add" style="width:100%;padding:10px;font-size:12px;border-radius:10px" onclick="exportData()">&#8681; Export all data</button>
           <label style="width:100%;display:block">
             <div class="btn-add" style="padding:10px;font-size:12px;border-radius:10px;text-align:center;cursor:pointer">&#8679; Import data</div>
             <input type="file" accept=".json" style="display:none" onchange="importData(this)">
@@ -2738,29 +2694,6 @@ function shake() {
 
 function openSettings() { openModal('settings'); }
 
-function showTokenSetup() {
-  const overlay = document.createElement('div');
-  overlay.id = 'token-setup';
-  overlay.innerHTML = `
-    <div style="max-width:420px;width:90%;background:var(--glass-card);border:1px solid var(--glass-border);border-radius:24px;padding:36px;box-shadow:0 24px 64px rgba(0,0,0,.18)">
-      <div style="font-family:'Fraunces',serif;font-size:26px;color:var(--text-1);margin-bottom:8px">Connect your data</div>
-      <div style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:24px">Paste your GitHub token so this device can sync data. It's stored only in this browser — never in the code.</div>
-      <input id="token-input" class="mi" placeholder="github_pat_..." style="margin-bottom:14px;font-size:12px;font-family:monospace">
-      <button class="btn-primary" style="width:100%;padding:13px" onclick="saveToken()">Connect</button>
-    </div>`;
-  overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);z-index:200;padding:20px';
-  document.body.appendChild(overlay);
-  document.getElementById('token-input').focus();
-}
-
-function saveToken() {
-  const val = (document.getElementById('token-input')?.value || '').trim();
-  if (!val) return;
-  localStorage.setItem('ss-gh-token', val);
-  document.getElementById('token-setup')?.remove();
-  // Now load from GitHub with the new token
-  loadState().then(renderAll);
-}
 
 function exportData() {
   const dump = {
