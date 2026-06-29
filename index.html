@@ -442,8 +442,11 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 .home-hi{font-family:'Fraunces',serif;font-size:38px;font-weight:400;color:var(--text-1);line-height:1.1}
 .home-hi em{font-style:italic;color:var(--lav)}
 
-.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.dash-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:18px;cursor:pointer;transition:all .2s}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;grid-auto-flow:dense}
+.dash-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:18px;cursor:pointer;transition:all .2s;position:relative}
+.widget-hide-btn{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:transparent;border:none;color:var(--text-3);font-size:15px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .15s;z-index:2;line-height:1}
+.dash-card:hover .widget-hide-btn{display:flex}
+.widget-hide-btn:hover{background:rgba(0,0,0,.1);color:var(--text-1)}
 .dash-card:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong);transform:translateY(-2px)}
 .dash-card.wide{grid-column:span 2}
 .dash-card.tall{grid-row:span 2}
@@ -516,6 +519,16 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   gap:8px;cursor:pointer;color:var(--text-2);transition:all .2s;background:transparent
 }
 .trip-add-card:hover{color:var(--text-1);border-color:var(--glass-border-strong);background:var(--glass-bg)}
+.past-trips-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:12px;border:1px solid var(--glass-border);
+  background:var(--glass-bg);cursor:pointer;margin-top:20px;transition:all .2s;user-select:none
+}
+.past-trips-toggle:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong)}
+.past-trips-toggle-left{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;color:var(--text-2);letter-spacing:.5px}
+.past-trips-caret{font-size:10px;color:var(--text-3);transition:transform .2s}
+.past-trips-caret.open{transform:rotate(180deg)}
+.past-trips-grid{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;opacity:.7}
 .trip-add-icon{font-size:28px}
 .trip-add-label{font-size:12px;font-weight:600}
 
@@ -636,6 +649,89 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 .recur-total-val{font-family:'Fraunces',serif;font-size:18px;color:var(--text-1)}
 @media(max-width:640px){.dash-grid{grid-template-columns:1fr}.dash-card.wide,.dash-card.tall{grid-column:span 1;grid-row:span 1}.home-hi{font-size:28px}}
 
+/* ===== MOVE ===== */
+.move-layout{display:grid;grid-template-columns:1fr 270px;gap:20px;align-items:start}
+@media(max-width:960px){.move-layout{grid-template-columns:1fr}}
+
+.day-strip{display:flex;gap:6px;margin-bottom:22px}
+.day-chip{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 4px;border-radius:13px;border:1px solid var(--glass-border);
+  background:var(--glass-bg);cursor:pointer;transition:all .15s
+}
+.day-chip:hover{background:var(--glass-bg-hover);border-color:var(--glass-border-strong)}
+.day-chip.today{background:rgba(114,80,196,.1);border-color:rgba(114,80,196,.26)}
+.day-chip.selected{background:rgba(114,80,196,.18);border-color:rgba(114,80,196,.4)}
+.day-chip.selected .day-chip-lbl,.day-chip.selected .day-chip-n{color:var(--lav)}
+.day-chip-lbl{font-size:8px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3)}
+.day-chip-n{font-size:14px;font-weight:600;color:var(--text-2)}
+.day-chip.today .day-chip-lbl,.day-chip.today .day-chip-n{color:var(--lav)}
+.day-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--lav);opacity:0}
+.day-chip.has-workout .day-chip-dot{opacity:1}
+
+.routine-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:border-color .2s}
+.routine-card:hover{border-color:var(--glass-border-strong)}
+.routine-head{display:flex;align-items:center;gap:12px;padding:18px;cursor:pointer;user-select:none}
+.routine-num{font-size:10px;font-weight:800;letter-spacing:3px;color:var(--text-3);font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0;min-width:22px}
+.routine-accent{width:3px;height:38px;border-radius:2px;flex-shrink:0}
+.routine-info{flex:1;min-width:0}
+.routine-name{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--text-1);margin-bottom:2px}
+.routine-meta{font-size:11px;color:var(--text-2)}
+.routine-type-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0}
+.routine-del-btn{width:22px;height:22px;border-radius:50%;background:transparent;border:none;color:var(--text-3);font-size:12px;cursor:pointer;flex-shrink:0;display:none;align-items:center;justify-content:center}
+.routine-card:hover .routine-del-btn{display:flex}
+.routine-del-btn:hover{color:var(--text-1);background:rgba(0,0,0,.08)}
+.routine-caret{font-size:10px;color:var(--text-3);transition:transform .22s;flex-shrink:0}
+.routine-caret.open{transform:rotate(180deg)}
+.routine-body{padding:0 18px 18px;display:none}
+.routine-body.open{display:block}
+
+.day-sel-wrap{display:flex;gap:5px;margin-bottom:14px}
+.day-sel-btn{
+  width:32px;height:32px;border-radius:50%;border:1.5px solid var(--glass-border);
+  background:transparent;color:var(--text-2);font-size:10px;font-weight:700;
+  cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif
+}
+.day-sel-btn.on{background:rgba(114,80,196,.15);border-color:var(--lav);color:var(--lav)}
+
+.ex-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--row-divider);cursor:pointer;transition:opacity .15s}
+.ex-row:last-child{border-bottom:none}
+.ex-row.done{opacity:.48}
+.ex-row.done .ex-name{text-decoration:line-through;color:var(--text-2)}
+.ex-num{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text-3);width:20px;text-align:right;flex-shrink:0}
+.ex-info{flex:1;min-width:0}
+.ex-name{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:1px}
+.ex-detail{font-size:11px;color:var(--text-2)}
+.ex-del{width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.08);border:none;color:var(--text-2);font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.ex-row:hover .ex-del{display:flex}
+.ex-cb{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--glass-border-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;color:transparent;font-size:12px}
+.ex-row.done .ex-cb{background:rgba(32,128,112,.18);border-color:var(--teal);color:var(--teal)}
+
+.routine-prog-wrap{margin-bottom:14px}
+.routine-prog-bar{height:3px;border-radius:2px;background:var(--bar-track);overflow:hidden;margin:6px 0 4px}
+.routine-prog-fill{height:100%;border-radius:2px;transition:width .4s}
+.routine-prog-lbl{font-size:10px;color:var(--text-2)}
+
+.today-workout-card{border-radius:16px;padding:18px;margin-bottom:14px;background:rgba(114,80,196,.06);border:1px solid rgba(114,80,196,.14)}
+.twc-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.twc-title{font-family:'Fraunces',serif;font-size:17px;font-weight:400;color:var(--text-1)}
+.twc-count{font-size:11px;color:var(--text-2)}
+
+.how-to-btn{
+  font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--lav);background:transparent;border:none;cursor:pointer;
+  padding:2px 7px;border-radius:6px;flex-shrink:0;opacity:.6;
+  transition:opacity .15s,background .15s;font-family:'Plus Jakarta Sans',sans-serif
+}
+.how-to-btn:hover{opacity:1;background:rgba(114,80,196,.09)}
+.how-to-content{
+  padding:11px 14px 11px 44px;
+  font-family:'Fraunces',serif;font-size:12.5px;font-style:italic;font-weight:300;
+  color:var(--text-2);line-height:1.7;
+  background:rgba(114,80,196,.04);
+  border-radius:0 0 10px 10px;margin-top:-1px;border-top:1px solid rgba(114,80,196,.07)
+}
+
 /* bottom nav mobile */
 .bnav{display:none}
 
@@ -674,7 +770,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 <div class="app">
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">A&amp;V<em>together</em></div>
+    <div class="logo">A&amp;V</div>
     <nav class="nav">
       <button class="nav-btn active" data-panel="home" onclick="switchPanel('home')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -691,6 +787,10 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
       <button class="nav-btn" data-panel="ledger" onclick="switchPanel('ledger')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         <span class="nav-tip">Ledger</span>
+      </button>
+      <button class="nav-btn" data-panel="move" onclick="switchPanel('move')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-tip">Move</span>
       </button>
     </nav>
     <div class="sidebar-foot">
@@ -716,51 +816,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
         <div class="home-hi" id="home-hi">Good morning, <em>Victoria</em></div>
       </div>
 
-      <div class="dash-grid">
-        <!-- Upcoming events -->
-        <div class="dash-card tall" onclick="switchPanel('sight')">
-          <div class="dc-label">&#128197; Upcoming</div>
-          <div id="dash-events"><div style="color:var(--text-3);font-size:12px;padding:8px 0">No events yet</div></div>
-        </div>
-
-        <!-- Song of the moment -->
-        <div class="dash-card" onclick="switchPanel('sound')">
-          <div class="dc-label">&#9835; Now Playing</div>
-          <div id="dash-song">
-            <div style="color:var(--text-3);font-size:12px;padding:8px 0">No songs yet</div>
-          </div>
-        </div>
-
-        <!-- Balance -->
-        <div class="dash-card" onclick="switchPanel('ledger')">
-          <div class="dc-label">&#128176; Budget</div>
-          <div class="dc-val" id="dash-bal-amt">$0.00</div>
-          <div class="dc-sub" id="dash-bal-desc">this month</div>
-          <div class="balance-mini" style="margin-top:8px">
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:4px">
-              <span>In <span id="dash-inc-amt" style="color:var(--teal);font-weight:700">$0</span></span>
-              <span>Out <span id="dash-exp-amt" style="color:var(--rose);font-weight:700">$0</span></span>
-            </div>
-            <div class="bm-bar-wrap"><div class="bm-bar" id="dash-bal-bar" style="width:0%;background:var(--teal)"></div></div>
-          </div>
-        </div>
-
-        <!-- Lists -->
-        <div class="dash-card wide" onclick="switchPanel('ledger')">
-          <div class="dc-label">&#9989; Lists</div>
-          <div id="dash-lists"><div style="color:var(--text-3);font-size:12px;padding:8px 0">No lists yet</div></div>
-        </div>
-
-        <!-- Vault -->
-        <div class="dash-card" onclick="switchPanel('sight')">
-          <div class="dc-label">&#128193; Vault</div>
-          <div class="dc-val" id="dash-vault-count">0</div>
-          <div class="dc-sub">documents stored</div>
-          <div class="dc-divider"></div>
-          <div id="dash-vault-items" style="display:flex;flex-direction:column;gap:4px"></div>
-        </div>
-
-      </div>
+      <div class="dash-grid" id="dash-grid"></div>
     </section>
 
     <!-- SIGHT PANEL -->
@@ -841,6 +897,16 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
             </div>
           </div>
           <div class="trips-grid" id="trips-grid"></div>
+          <div id="past-trips-section" style="display:none">
+            <div class="past-trips-toggle" onclick="togglePastTrips()">
+              <div class="past-trips-toggle-left">
+                <span>🗂</span>
+                <span id="past-trips-label">Past Trips</span>
+              </div>
+              <span class="past-trips-caret" id="past-trips-caret">▼</span>
+            </div>
+            <div class="past-trips-grid" id="past-trips-grid" style="display:none"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -970,6 +1036,20 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
       </div>
     </section>
 
+    <!-- MOVE PANEL -->
+    <section class="panel" id="panel-move">
+      <div class="ph">
+        <div class="ph-eye">Move</div>
+        <div class="ph-title" id="move-ph-title">Our Routines</div>
+      </div>
+
+      <div class="day-strip" id="move-day-strip"></div>
+
+      <div>
+        <div id="move-today"></div>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -990,6 +1070,10 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   <div class="bn" data-panel="ledger" onclick="switchPanel('ledger')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     Ledger
+  </div>
+  <div class="bn" data-panel="move" onclick="switchPanel('move')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Move
   </div>
 </nav>
 
@@ -1026,10 +1110,45 @@ let state = {
   expenses: [],
   trips: [],
   recurring: [],
-  income: []
+  income: [],
+  workouts: [],
+  workoutLog: {}
 };
 
 function uid() { return Math.random().toString(36).slice(2,10); }
+
+function buildDefaultRoutines() {
+  return [
+    { id:'routine-mon', name:'Lower Body', type:'stretch', days:['mon'], exercises:[
+      { id:'ex-mon-1', name:'Cat-Cow + Hip Circles', detail:'10 reps each direction', howTo:'Begin on all fours, wrists under shoulders, knees under hips. Inhale — drop your belly, lift your tailbone and gaze (Cow). Exhale — round your spine, tuck chin and pelvis (Cat). Repeat 10x. Then circle your hips slowly clockwise and counterclockwise, 10 each direction.' },
+      { id:'ex-mon-2', name:'Pigeon Pose + Hamstring Flossing', detail:'45s each side', howTo:'From downward dog, bring your right knee toward your right wrist and lower the outer hip down. Extend your left leg straight back, square your hips, and hold 45 s. For flossing: slowly straighten the front leg, flex and point the foot 10x. Switch sides.' }
+    ]},
+    { id:'routine-tue', name:'Upper Body / Posture', type:'stretch', days:['tue'], exercises:[
+      { id:'ex-tue-1', name:'Doorway Chest Opener', detail:'30s each side', howTo:'Stand in a doorway. Bend elbows to 90 degrees and place forearms against the frame. Step one foot forward and lean gently through until you feel a stretch across your chest and front shoulders. Hold 30 s each side. Keep your core braced and avoid arching your lower back.' },
+      { id:'ex-tue-2', name:'Thread the Needle + Neck Release', detail:'30s each side', howTo:'On all fours, slide your right arm under your body toward the left, resting your right shoulder and cheek on the mat. Hold 30 s. Return and repeat on the other side. Finish seated: tilt your right ear toward your right shoulder, hold 20 s each side.' }
+    ]},
+    { id:'routine-wed', name:'Lower Body', type:'stretch', days:['wed'], exercises:[
+      { id:'ex-wed-1', name:'Lunges with Twist', detail:'10 reps each side', howTo:'Step your right foot forward into a low lunge, back knee hovering or on the mat. Place your left hand on the floor and open your right arm toward the ceiling, rotating through your thoracic spine. Hold 2 s, return, and repeat 10x per side.' },
+      { id:'ex-wed-2', name:'Kneeling Hip Flexor + Calf Stretch', detail:'30s each side', howTo:'Kneel on your right knee, left foot forward with knee stacked over ankle. Tuck your pelvis under slightly and shift hips forward until you feel a stretch in the right hip flexor. Hold 30 s. For calves: stand and place one foot against a wall or step, heel on the ground, and press gently forward. 30 s each side.' }
+    ]},
+    { id:'routine-thu', name:'Upper Body / Posture', type:'stretch', days:['thu'], exercises:[
+      { id:'ex-thu-1', name:'Arm Circles + Thoracic Rotation', detail:'10 reps each direction', howTo:'Stand tall, feet hip-width. Make 10 small then 10 large arm circles forward, then reverse. For thoracic rotation: sit cross-legged or in a chair, place one hand behind your head and rotate your elbow toward the ceiling following with your gaze. 10 slow reps each side.' },
+      { id:'ex-thu-2', name:"Child's Pose + Lat Stretch", detail:'60s, then 30s each side', howTo:"Kneel, sit back toward your heels, and extend arms forward. Let your forehead rest on the mat and breathe deeply for 60 s. Then walk your hands to the right to feel a stretch along your left lat. Hold 30 s each side." }
+    ]},
+    { id:'routine-fri', name:'Full Body Flow', type:'stretch', days:['fri'], exercises:[
+      { id:'ex-fri-1', name:'Sun Salutations', detail:'5 rounds', howTo:'Stand at the top of your mat. Inhale, sweep arms overhead. Exhale, fold forward. Inhale, halfway lift. Exhale, step or jump back to plank and lower slowly. Inhale into upward-facing dog. Exhale into downward dog, hold 5 breaths. Step or jump forward, rise up. 5 full rounds.' },
+      { id:'ex-fri-2', name:'Figure-Four + Glute Release', detail:'30-45s each side', howTo:'Lie on your back with knees bent. Cross your right ankle over your left thigh and flex your right foot. Thread your hands behind your left thigh and draw both legs gently toward your chest. Hold 30-45 s. Use your right elbow to gently press the right knee away for a deeper release. Switch sides.' }
+    ]},
+    { id:'routine-sat', name:'Active Recovery', type:'stretch', days:['sat'], exercises:[
+      { id:'ex-sat-1', name:'Walking / Mobility Walk', detail:'10-20 min', howTo:'Go for a 10-20 min walk at an easy pace. Focus on heel-to-toe contact, relaxed arms swinging naturally, and an upright posture. Every 5 min, add 5 hip circles each direction and 10 slow knee raises to keep the joints mobile.' },
+      { id:'ex-sat-2', name:'Full Body Foam Rolling / Static Hold', detail:'60-90s per area', howTo:'Spend 60-90 s rolling each major muscle group: calves, hamstrings, glutes, thoracic spine, and lats. Move slowly and pause on tender spots. Finish with a 60 s static hold of whichever area felt tightest today.' }
+    ]},
+    { id:'routine-sun', name:'Deep Reset', type:'stretch', days:['sun'], exercises:[
+      { id:'ex-sun-1', name:"Child's Pose + Deep Breathing", detail:'10 breath cycles', howTo:"Kneel and sit back on your heels, arms extended forward or resting by your sides. Close your eyes. Inhale through your nose for 4 counts, hold for 4, exhale slowly for 6. Feel your back and ribs expand with each breath. Complete 10 cycles, about 2-3 minutes." },
+      { id:'ex-sun-2', name:'Psoas Release + Couch Stretch', detail:'2 min + 60s each side', howTo:'For the psoas: lie on your back and place a folded blanket or yoga block under your sacrum. Let both legs relax for 2 min. For the couch stretch: kneel facing away from a wall or sofa, place your back foot up the surface, tuck your pelvis under, and stand tall until you feel a deep hip flexor stretch. Hold 60 s each side.' }
+    ]}
+  ];
+}
 
 function loadState() {
   try {
@@ -1038,6 +1157,16 @@ function loadState() {
       state = JSON.parse(s);
       // migrate default partner name
       if (state.names.b === 'Partner') state.names.b = 'Alan';
+      // migrate workouts
+      if (!state.workoutLog) state.workoutLog = {};
+      // always refresh builtin routines (stable exercise IDs mean logs are preserved)
+      const builtinIds = ['stretch-default','routine-mon','routine-tue','routine-wed','routine-thu','routine-fri','routine-sat','routine-sun'];
+      const custom = (state.workouts || []).filter(r => !builtinIds.includes(r.id));
+      state.workouts = [...buildDefaultRoutines(), ...custom];
+    } else {
+      // fresh state
+      state.workouts   = buildDefaultRoutines();
+      state.workoutLog = {};
     }
   } catch(e) {}
 }
@@ -1090,6 +1219,10 @@ function switchPanel(name) {
 // HOME DASHBOARD
 // ============================================================
 function renderHome() {
+  // Rebuild grid (respects hidden widgets)
+  const grid = document.getElementById('dash-grid');
+  if (grid) grid.innerHTML = buildDashGrid();
+
   // Greeting
   const now = new Date();
   const hour = now.getHours();
@@ -1196,6 +1329,73 @@ function renderHome() {
         <div class="dc-row-sub">${v.type}</div>
       </div>
     `).join('') || '<div style="color:var(--text-3);font-size:12px;padding:4px 0">Empty vault</div>';
+  }
+
+  // Trips
+  const tripsEl = document.getElementById('dash-trips');
+  if (tripsEl) {
+    const todayMid = new Date(); todayMid.setHours(0,0,0,0);
+    const active = (state.trips || [])
+      .filter(t => t.status !== 'completed')
+      .sort((a,b) => {
+        if (!a.startDate && !b.startDate) return 0;
+        if (!a.startDate) return 1;
+        if (!b.startDate) return -1;
+        return a.startDate.localeCompare(b.startDate);
+      });
+    if (!active.length) {
+      tripsEl.innerHTML = '<div style="color:var(--text-3);font-size:12px;padding:8px 0">No trips planned — <span style="color:var(--lav);cursor:pointer" onclick="switchPanel(\'sight\')">add one</span></div>';
+    } else {
+      const next = active[0];
+      const rest = active.slice(1, 3);
+      const sd = next.startDate ? new Date(next.startDate+'T00:00:00') : null;
+      const ed = next.endDate   ? new Date(next.endDate  +'T00:00:00') : null;
+      const days = sd ? Math.ceil((sd - todayMid) / 86400000) : null;
+      const countdownStr = days === null ? '' : days === 0 ? 'Today!' : days > 0 ? `in ${days}d` : 'Ongoing';
+      const dateStr = sd ? sd.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + (ed ? ' – '+ed.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '') : 'Dates TBD';
+      const grad = TRIP_GRADIENTS[next.status] || TRIP_GRADIENTS.planning;
+      tripsEl.innerHTML = `
+        <div style="border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;height:64px">
+          <div style="position:absolute;inset:0;background:${grad};opacity:.75"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between;padding:8px 11px">
+            <div>
+              <div style="font-family:'Fraunces',serif;font-size:14px;color:#fff;font-weight:400;text-shadow:0 1px 3px rgba(0,0,0,.3)">${esc(next.name||next.destination)}</div>
+              ${next.name ? `<div style="font-size:9px;color:rgba(255,255,255,.65)">${esc(next.destination)}</div>` : ''}
+            </div>
+            ${countdownStr ? `<div style="font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.28);padding:3px 8px;border-radius:20px">${countdownStr}</div>` : ''}
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-2);margin-bottom:${rest.length?'8px':'0'}">${dateStr}</div>
+        ${rest.map(t => {
+          const tsd = t.startDate ? new Date(t.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'TBD';
+          return `<div class="dc-row">
+            <div class="dc-dot" style="background:${(TRIP_GRADIENTS[t.status]||'').split(',')[1]||'var(--lav)'}"></div>
+            <div class="dc-row-text">${esc(t.name||t.destination)}</div>
+            <div class="dc-row-sub">${tsd}</div>
+          </div>`;
+        }).join('')}
+      `;
+    }
+  }
+
+  // Today's workout
+  const moveWidEl = document.getElementById('dash-move');
+  if (moveWidEl) {
+    const todayDayKey = MOVE_DAY_KEYS[now.getDay()];
+    const todayRoutines = (state.workouts || []).filter(r => r.days.includes(todayDayKey));
+    if (!todayRoutines.length) {
+      moveWidEl.innerHTML = `<div style="color:var(--text-3);font-size:12px;padding:8px 0">Rest day — enjoy it &#128522;</div>`;
+    } else {
+      const r = todayRoutines[0];
+      const col = ROUTINE_COLORS[r.type] || ROUTINE_COLORS.custom;
+      moveWidEl.innerHTML = `
+        <div style="font-family:'Fraunces',serif;font-size:15px;color:var(--text-1);margin-bottom:8px">${esc(r.name)}</div>
+        ${r.exercises.map(ex => `<div class="dc-row">
+          <div class="dc-dot" style="background:${col}"></div>
+          <div class="dc-row-text">${esc(ex.name)}</div>
+        </div>`).join('')}
+      `;
+    }
   }
 
 }
@@ -1980,9 +2180,20 @@ function openModal(mode, extra) {
     `;
   } else if (mode === 'settings') {
     title.textContent = 'Settings';
+    const hidden = getHiddenWidgets();
+    const widgetRows = Object.entries(WIDGET_LABELS).map(([id, label]) => {
+      const isHidden = hidden.includes(id);
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--row-divider)">
+        <span style="font-size:13px;color:${isHidden ? 'var(--text-3)' : 'var(--text-1)'}">${label}</span>
+        ${isHidden
+          ? `<button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="showWidget('${id}')">Show</button>`
+          : `<span style="font-size:11px;color:var(--text-2)">Visible</span>`}
+      </div>`;
+    }).join('');
     body.innerHTML = `
       <div class="mf"><div class="ml">Your Name</div><input class="mi" id="m-name-a" value="${esc(state.names.a)}" placeholder="Your name"></div>
       <div class="mf"><div class="ml">Partner's Name</div><input class="mi" id="m-name-b" value="${esc(state.names.b)}" placeholder="Partner's name"></div>
+      <div class="mf" style="margin-top:18px"><div class="ml">Dashboard Widgets</div>${widgetRows}</div>
     `;
     saveBtn.textContent = 'Save Names';
 
@@ -2235,6 +2446,30 @@ function openModal(mode, extra) {
       <div class="mf"><div class="ml">Date</div><input class="mi" id="m-date" type="date" value="${today}"></div>
     `;
     saveBtn.textContent = 'Log Income';
+
+  } else if (mode === 'routine') {
+    title.textContent = 'New Routine';
+    body.innerHTML = `
+      <div class="mf"><div class="ml">Name</div><input class="mi" id="m-rname" placeholder="Morning Stretch, Strength A, Yoga Flow..."></div>
+      <div class="mf"><div class="ml">Type</div>
+        <select class="mi" id="m-rtype">
+          <option value="stretch">Stretch</option>
+          <option value="strength">Strength</option>
+          <option value="cardio">Cardio</option>
+          <option value="yoga">Yoga</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div class="mf"><div class="ml">Days</div>
+        <div class="day-sel-wrap" id="m-days-wrap">
+          ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((lbl,i) => {
+            const dk = ['sun','mon','tue','wed','thu','fri','sat'][i];
+            return `<button type="button" class="day-sel-btn" data-day="${dk}" onclick="this.classList.toggle('on')">${lbl[0]}</button>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    saveBtn.textContent = 'Create Routine';
   }
 
   bg.classList.add('open');
@@ -2386,6 +2621,14 @@ function saveModal() {
     if (!state.income) state.income = [];
     state.income.push({ id: uid(), name, amount: amt, source: v('m-source'), date: v('m-date') || new Date().toISOString().slice(0,10) });
     saveState(); closeModal(); renderExpenses();
+
+  } else if (modalMode === 'routine') {
+    const name = v('m-rname');
+    if (!name) return shake();
+    const days = [...document.querySelectorAll('#m-days-wrap .day-sel-btn.on')].map(b => b.dataset.day);
+    if (!state.workouts) state.workouts = [];
+    state.workouts.push({ id: uid(), name, type: v('m-rtype') || 'custom', days, exercises: [] });
+    saveState(); closeModal(); renderMove();
   }
 }
 
@@ -2412,6 +2655,7 @@ function fabClick() {
   if (currentPanel === 'home') return;
   if (currentPanel === 'sight') openModal('event', { date: new Date().toISOString().slice(0,10) });
   else if (currentPanel === 'sound') openModal('song');
+  else if (currentPanel === 'move') return;
   else if (currentPanel === 'ledger') {
     const activeTab = document.getElementById('tab-expenses').classList.contains('active') ? 'expenses' : 'lists';
     if (activeTab === 'expenses') openModal('expense');
@@ -2583,8 +2827,29 @@ function renderTravel() {
   const countdownEl = document.getElementById('travel-countdown');
   if (!grid) return;
 
-  const now = new Date();
-  const upcoming = state.trips.filter(t => t.startDate && new Date(t.startDate+'T00:00:00') >= now && t.status !== 'completed');
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Auto-complete trips whose end date has passed
+  let changed = false;
+  state.trips.forEach(t => {
+    if (t.endDate && t.status !== 'completed') {
+      const end = new Date(t.endDate + 'T00:00:00');
+      if (end < today) { t.status = 'completed'; changed = true; }
+    }
+  });
+  if (changed) saveState();
+
+  const active = state.trips
+    .filter(t => t.status !== 'completed')
+    .sort((a, b) => {
+      if (!a.startDate && !b.startDate) return 0;
+      if (!a.startDate) return 1;
+      if (!b.startDate) return -1;
+      return a.startDate.localeCompare(b.startDate);
+    });
+  const past = state.trips.filter(t => t.status === 'completed');
+
+  const upcoming = active.filter(t => t.startDate && new Date(t.startDate+'T00:00:00') >= today);
   if (totalEl) totalEl.textContent = state.trips.length;
   if (upcomingEl) upcomingEl.textContent = upcoming.length;
 
@@ -2592,17 +2857,17 @@ function renderTravel() {
     const next = [...upcoming].sort((a,b) => a.startDate.localeCompare(b.startDate))[0];
     if (next) {
       const label = next.name || next.destination;
-      const days = Math.ceil((new Date(next.startDate+'T00:00:00') - now) / 86400000);
+      const days = Math.ceil((new Date(next.startDate+'T00:00:00') - today) / 86400000);
       countdownEl.innerHTML = days === 0
         ? `<div class="countdown-chip">✈️ ${esc(label)} starts today!</div>`
         : `<div class="countdown-chip">✈️ ${esc(label)} in ${days} day${days!==1?'s':''}</div>`;
     } else { countdownEl.innerHTML = ''; }
   }
 
-  grid.innerHTML = state.trips.map(t => {
+  function tripCardHTML(t) {
     const whoLabel = t.who==='a' ? state.names.a : t.who==='b' ? state.names.b : state.names.a+' & '+state.names.b;
-    const sd = t.startDate ? new Date(t.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
-    const ed = t.endDate ? new Date(t.endDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const sd = t.startDate ? new Date(t.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const ed = t.endDate   ? new Date(t.endDate  +'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
     const dateStr = sd && ed ? sd+' – '+ed : sd || 'Dates TBD';
     const packed = (t.packing||[]).filter(p=>p.done).length;
     const packTotal = (t.packing||[]).length;
@@ -2626,10 +2891,35 @@ function renderTravel() {
       </div>
       <button class="trip-del-btn" onclick="deleteTrip('${t.id}',event)">✕</button>
     </div>`;
-  }).join('') + `<div class="trip-add-card" onclick="openModal('trip')">
+  }
+
+  grid.innerHTML = active.map(tripCardHTML).join('') + `<div class="trip-add-card" onclick="openModal('trip')">
     <div class="trip-add-icon">+</div>
     <div class="trip-add-label">Plan a trip</div>
   </div>`;
+
+  const pastSection = document.getElementById('past-trips-section');
+  const pastGrid    = document.getElementById('past-trips-grid');
+  const pastLabel   = document.getElementById('past-trips-label');
+  if (pastSection && pastGrid && pastLabel) {
+    if (past.length) {
+      pastSection.style.display = '';
+      pastLabel.textContent = `Past Trips (${past.length})`;
+      const sorted = [...past].sort((a,b) => (b.endDate||'').localeCompare(a.endDate||''));
+      pastGrid.innerHTML = sorted.map(tripCardHTML).join('');
+    } else {
+      pastSection.style.display = 'none';
+    }
+  }
+}
+
+function togglePastTrips() {
+  const grid  = document.getElementById('past-trips-grid');
+  const caret = document.getElementById('past-trips-caret');
+  if (!grid) return;
+  const open = grid.style.display !== 'none';
+  grid.style.display  = open ? 'none' : 'grid';
+  if (caret) caret.classList.toggle('open', !open);
 }
 
 function deleteTrip(id, e) {
@@ -3130,12 +3420,288 @@ function renderAll() {
   renderSound();
   renderLists();
   renderExpenses();
+  renderMove();
 }
 
 function esc(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ============================================================
+// MOVE / WORKOUTS
+// ============================================================
+const ROUTINE_TYPES   = { stretch:'Stretch', strength:'Strength', cardio:'Cardio', yoga:'Yoga', custom:'Custom' };
+const ROUTINE_COLORS  = { stretch:'var(--lav)', strength:'var(--rose)', cardio:'var(--gold)', yoga:'var(--teal)', custom:'var(--text-2)' };
+const MOVE_DAY_KEYS   = ['sun','mon','tue','wed','thu','fri','sat'];
+const MOVE_DAY_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function todayDateKey() { return new Date().toISOString().slice(0,10); }
+function todayDayKey()  { return MOVE_DAY_KEYS[new Date().getDay()]; }
+
+function moveLog(date, routineId) {
+  if (!state.workoutLog) state.workoutLog = {};
+  if (!state.workoutLog[date]) state.workoutLog[date] = {};
+  if (!state.workoutLog[date][routineId]) state.workoutLog[date][routineId] = [];
+  return state.workoutLog[date][routineId];
+}
+
+let moveSelectedDate = null; // null = today
+const moveHowToOpen = new Set();
+
+function toggleHowTo(exId, e) {
+  e.stopPropagation();
+  if (moveHowToOpen.has(exId)) moveHowToOpen.delete(exId);
+  else moveHowToOpen.add(exId);
+  renderMove();
+}
+
+function selectMoveDay(dateStr) {
+  moveSelectedDate = dateStr;
+  renderMove();
+}
+
+function activeMoveDate() {
+  return moveSelectedDate || todayDateKey();
+}
+
+function toggleExercise(routineId, exId) {
+  const log = moveLog(activeMoveDate(), routineId);
+  const i = log.indexOf(exId);
+  if (i >= 0) log.splice(i, 1); else log.push(exId);
+  saveState(); renderMove();
+}
+
+function toggleRoutineDay(routineId, day) {
+  const r = (state.workouts||[]).find(r => r.id === routineId);
+  if (!r) return;
+  const i = r.days.indexOf(day);
+  if (i >= 0) r.days.splice(i, 1); else r.days.push(day);
+  saveState(); renderMove();
+}
+
+function deleteRoutine(id, e) {
+  e.stopPropagation();
+  state.workouts = (state.workouts||[]).filter(r => r.id !== id);
+  saveState(); renderMove();
+}
+
+function deleteExercise(routineId, exId, e) {
+  e.stopPropagation();
+  const r = (state.workouts||[]).find(r => r.id === routineId);
+  if (r) { r.exercises = r.exercises.filter(ex => ex.id !== exId); saveState(); renderMove(); }
+}
+
+function addExerciseInline(routineId) {
+  const nameEl   = document.getElementById('ex-name-' + routineId);
+  const detailEl = document.getElementById('ex-detail-' + routineId);
+  if (!nameEl || !nameEl.value.trim()) return;
+  const r = (state.workouts||[]).find(r => r.id === routineId);
+  if (!r) return;
+  r.exercises.push({ id: uid(), name: nameEl.value.trim(), detail: detailEl?.value.trim() || '' });
+  nameEl.value = ''; if (detailEl) detailEl.value = '';
+  saveState(); renderMove();
+}
+
+function toggleRoutineCard(id) {
+  const body  = document.getElementById('rb-' + id);
+  const caret = document.getElementById('rc-' + id);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (caret) caret.classList.toggle('open');
+}
+
+function renderMove() {
+  if (!state.workouts)   state.workouts = [];
+  if (!state.workoutLog) state.workoutLog = {};
+
+  const todayEl = document.getElementById('move-today');
+  const stripEl = document.getElementById('move-day-strip');
+  if (!todayEl) return;
+
+  const now     = new Date();
+  const dateKey = activeMoveDate();
+  const selDate = new Date(dateKey + 'T00:00:00');
+  const dayKey  = MOVE_DAY_KEYS[selDate.getDay()];
+  const isToday = selDate.toDateString() === now.toDateString();
+
+  // Update panel title to selected date
+  const titleEl = document.getElementById('move-ph-title');
+  if (titleEl) titleEl.innerHTML = `<strong>${selDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</strong>`;
+
+  // ── Day strip (Mon→Sun of current week) ──
+  if (stripEl) {
+    const mon = new Date(now);
+    mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    stripEl.innerHTML = Array.from({length:7}, (_,i) => {
+      const d    = new Date(mon); d.setDate(mon.getDate() + i);
+      const dk   = MOVE_DAY_KEYS[d.getDay()];
+      const dStr = d.toISOString().slice(0,10);
+      const isTod = d.toDateString() === now.toDateString();
+      const isSel = dStr === dateKey;
+      const hasWork = state.workouts.some(r => r.days.includes(dk));
+      return `<div class="day-chip ${isTod?'today':''} ${isSel?'selected':''} ${hasWork?'has-workout':''}"
+               onclick="selectMoveDay('${dStr}')">
+        <div class="day-chip-lbl">${MOVE_DAY_LABELS[d.getDay()]}</div>
+        <div class="day-chip-n">${d.getDate()}</div>
+        <div class="day-chip-dot"></div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Helper: render exercise list ──
+  function exListHTML(r) {
+    return r.exercises.map((ex, j) => {
+      const howOpen = moveHowToOpen.has(ex.id);
+      return `<div>
+        <div class="ex-row">
+          <div class="ex-num">${String(j+1).padStart(2,'0')}</div>
+          <div class="ex-info">
+            <div class="ex-name">${esc(ex.name)}</div>
+            ${ex.detail?`<div class="ex-detail">${esc(ex.detail)}</div>`:''}
+          </div>
+          ${ex.howTo?`<button class="how-to-btn" onclick="toggleHowTo('${ex.id}',event)">${howOpen?'close':'how to'}</button>`:''}
+        </div>
+        ${ex.howTo&&howOpen?`<div class="how-to-content">${esc(ex.howTo)}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  // ── Selected day's routines ──
+  const dayLabel = isToday
+    ? `Today · ${selDate.toLocaleDateString('en-US',{weekday:'long'})}`
+    : selDate.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+  const dayRoutines = state.workouts.filter(r => r.days.includes(dayKey));
+  if (todayEl) {
+    if (!dayRoutines.length) {
+      todayEl.innerHTML = `<div class="gc-sm" style="margin-bottom:16px;text-align:center;padding:22px 0">
+        <div style="font-size:28px;margin-bottom:8px">🎉</div>
+        <div style="font-size:13px;color:var(--text-2)">Nothing scheduled — rest day</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:4px">${dayLabel}</div>
+      </div>`;
+    } else {
+      todayEl.innerHTML = dayRoutines.map(r => {
+        const log   = moveLog(dateKey, r.id);
+        const total = r.exercises.length;
+        const done  = r.exercises.filter(ex => log.includes(ex.id)).length;
+        const pct   = total ? Math.round(done/total*100) : 0;
+        const col   = ROUTINE_COLORS[r.type] || ROUTINE_COLORS.custom;
+        return `<div class="today-workout-card">
+          <div class="twc-head">
+            <div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:${col};margin-bottom:4px">${dayLabel}</div>
+              <div class="twc-title">${esc(r.name)}</div>
+            </div>
+            <div class="twc-count">${done}/${total}</div>
+          </div>
+          <div class="routine-prog-wrap">
+            <div class="routine-prog-bar"><div class="routine-prog-fill" style="width:${pct}%;background:${col}"></div></div>
+            <div class="routine-prog-lbl">${pct===100?'Complete ✓':`${pct}% done`}</div>
+          </div>
+          ${exListHTML(r)}
+        </div>`;
+      }).join('');
+    }
+  }
+
+}
+
+// ============================================================
+// WIDGET VISIBILITY
+// ============================================================
+const WIDGET_HIDE_KEY = 'ss-hidden-widgets';
+const WIDGET_LABELS = {
+  'widget-upcoming': 'Upcoming Events',
+  'widget-song':     'Now Playing',
+  'widget-budget':   'Budget',
+  'widget-lists':    'Lists',
+  'widget-vault':    'Vault',
+  'widget-trips':    'Trips',
+  'widget-move':     "Today's Flexibility"
+};
+
+function getHiddenWidgets() {
+  try { return JSON.parse(localStorage.getItem(WIDGET_HIDE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function buildDashGrid() {
+  const hidden = getHiddenWidgets();
+  const cards = [
+    {
+      id:'widget-upcoming', cls:'dash-card tall', nav:'sight',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-upcoming',event)" title="Hide">×</button>
+            <div class="dc-label">&#128197; Upcoming</div>
+            <div id="dash-events"></div>`
+    },
+    {
+      id:'widget-song', cls:'dash-card', nav:'sound',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-song',event)" title="Hide">×</button>
+            <div class="dc-label">&#9835; Now Playing</div>
+            <div id="dash-song"></div>`
+    },
+    {
+      id:'widget-budget', cls:'dash-card', nav:'ledger',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-budget',event)" title="Hide">×</button>
+            <div class="dc-label">&#128176; Budget</div>
+            <div class="dc-val" id="dash-bal-amt">$0.00</div>
+            <div class="dc-sub" id="dash-bal-desc">this month</div>
+            <div class="balance-mini" style="margin-top:8px">
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:4px">
+                <span>In <span id="dash-inc-amt" style="color:var(--teal);font-weight:700">$0</span></span>
+                <span>Out <span id="dash-exp-amt" style="color:var(--rose);font-weight:700">$0</span></span>
+              </div>
+              <div class="bm-bar-wrap"><div class="bm-bar" id="dash-bal-bar" style="width:0%;background:var(--teal)"></div></div>
+            </div>`
+    },
+    {
+      id:'widget-lists', cls:'dash-card wide', nav:'ledger',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-lists',event)" title="Hide">×</button>
+            <div class="dc-label">&#9989; Lists</div>
+            <div id="dash-lists"></div>`
+    },
+    {
+      id:'widget-vault', cls:'dash-card', nav:'sight',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-vault',event)" title="Hide">×</button>
+            <div class="dc-label">&#128193; Vault</div>
+            <div class="dc-val" id="dash-vault-count">0</div>
+            <div class="dc-sub">documents stored</div>
+            <div class="dc-divider"></div>
+            <div id="dash-vault-items" style="display:flex;flex-direction:column;gap:4px"></div>`
+    },
+    {
+      id:'widget-trips', cls:'dash-card', nav:'sight',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-trips',event)" title="Hide">×</button>
+            <div class="dc-label">&#9992;&#65039; Trips</div>
+            <div id="dash-trips"></div>`
+    },
+    {
+      id:'widget-move', cls:'dash-card', nav:'move',
+      html:`<button class="widget-hide-btn" onclick="hideWidget('widget-move',event)" title="Hide">×</button>
+            <div class="dc-label">&#128170; Today's Flexibility</div>
+            <div id="dash-move"></div>`
+    }
+  ];
+  return cards
+    .filter(c => !hidden.includes(c.id))
+    .map(c => `<div class="${c.cls}" id="${c.id}" onclick="switchPanel('${c.nav}')">${c.html}</div>`)
+    .join('');
+}
+
+function hideWidget(id, e) {
+  e.stopPropagation();
+  const hidden = getHiddenWidgets();
+  if (!hidden.includes(id)) { hidden.push(id); localStorage.setItem(WIDGET_HIDE_KEY, JSON.stringify(hidden)); }
+  renderHome();
+}
+
+function showWidget(id) {
+  const hidden = getHiddenWidgets().filter(w => w !== id);
+  localStorage.setItem(WIDGET_HIDE_KEY, JSON.stringify(hidden));
+  renderHome();
+  openSettings();
+}
+
+function applyHiddenWidgets() { renderHome(); }
 
 // ============================================================
 // INIT
