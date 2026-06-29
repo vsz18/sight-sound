@@ -2716,15 +2716,17 @@ function importData(input) {
   reader.onload = e => {
     try {
       const dump = JSON.parse(e.target.result);
-      if (dump[STORE_KEY]) localStorage.setItem(STORE_KEY, dump[STORE_KEY]);
+      if (!dump[STORE_KEY]) { alert('No data found in file.'); return; }
+      // Set state directly — bypass loadState so DB doesn't overwrite the import
+      state = { ...state, ...JSON.parse(dump[STORE_KEY]) };
+      applyMigrations();
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      pushToDB();
       if (dump['ss-theme']) localStorage.setItem('ss-theme', dump['ss-theme']);
       if (dump[WIDGET_HIDE_KEY]) localStorage.setItem(WIDGET_HIDE_KEY, dump[WIDGET_HIDE_KEY]);
       closeModal();
-      loadState().then(() => {
-        pushToDB();
-        initTheme();
-        renderAll();
-      });
+      initTheme();
+      renderAll();
     } catch(err) {
       alert('Could not read file — make sure it\'s a valid Sight & Sound export.');
     }
