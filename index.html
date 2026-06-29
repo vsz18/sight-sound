@@ -2194,6 +2194,16 @@ function openModal(mode, extra) {
       <div class="mf"><div class="ml">Your Name</div><input class="mi" id="m-name-a" value="${esc(state.names.a)}" placeholder="Your name"></div>
       <div class="mf"><div class="ml">Partner's Name</div><input class="mi" id="m-name-b" value="${esc(state.names.b)}" placeholder="Partner's name"></div>
       <div class="mf" style="margin-top:18px"><div class="ml">Dashboard Widgets</div>${widgetRows}</div>
+      <div class="mf" style="margin-top:24px">
+        <div class="ml">Data</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+          <button class="btn-add" style="width:100%;padding:10px;font-size:12px;border-radius:10px" onclick="exportData()">&#8681; Export all data</button>
+          <label style="width:100%;display:block">
+            <div class="btn-add" style="padding:10px;font-size:12px;border-radius:10px;text-align:center;cursor:pointer">&#8679; Import data</div>
+            <input type="file" accept=".json" style="display:none" onchange="importData(this)">
+          </label>
+        </div>
+      </div>
     `;
     saveBtn.textContent = 'Save Names';
 
@@ -2647,6 +2657,41 @@ function shake() {
 }
 
 function openSettings() { openModal('settings'); }
+
+function exportData() {
+  const dump = {
+    [STORE_KEY]:      localStorage.getItem(STORE_KEY),
+    'ss-theme':       localStorage.getItem('ss-theme'),
+    [WIDGET_HIDE_KEY]:localStorage.getItem(WIDGET_HIDE_KEY)
+  };
+  const blob = new Blob([JSON.stringify(dump, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sight-sound-data.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const dump = JSON.parse(e.target.result);
+      if (dump[STORE_KEY]) localStorage.setItem(STORE_KEY, dump[STORE_KEY]);
+      if (dump['ss-theme']) localStorage.setItem('ss-theme', dump['ss-theme']);
+      if (dump[WIDGET_HIDE_KEY]) localStorage.setItem(WIDGET_HIDE_KEY, dump[WIDGET_HIDE_KEY]);
+      closeModal();
+      loadState();
+      initTheme();
+      renderAll();
+    } catch(err) {
+      alert('Could not read file — make sure it\'s a valid Sight & Sound export.');
+    }
+  };
+  reader.readAsText(file);
+}
 
 // ============================================================
 // FAB
