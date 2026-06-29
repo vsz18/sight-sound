@@ -89,7 +89,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 @keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
 
 /* layout */
-.app{display:flex;height:100vh;position:relative;z-index:1}
+.app{display:flex;height:100vh;height:100dvh;position:relative;z-index:1}
 
 /* sidebar */
 .sidebar{
@@ -124,7 +124,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 .sidebar-foot{margin-top:auto;padding:0 8px;width:100%}
 
 /* main */
-.main{flex:1;overflow-y:auto;overflow-x:hidden;padding:32px}
+.main{flex:1;overflow-y:auto;overflow-x:hidden;padding:32px;-webkit-overflow-scrolling:touch}
 .main::-webkit-scrollbar{width:3px}
 .main::-webkit-scrollbar-thumb{background:var(--glass-border);border-radius:2px}
 .main::-webkit-scrollbar-track{background:transparent}
@@ -741,7 +741,7 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 }
 @media(max-width:640px){
   .sidebar{display:none}
-  .main{padding:18px 14px 80px}
+  .main{padding:18px 14px 100px}
   .bnav{
     display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;
     background:var(--bnav-bg);backdrop-filter:blur(22px);
@@ -1266,7 +1266,7 @@ function renderHome() {
   const dateEl = document.getElementById('home-date');
   const hiEl = document.getElementById('home-hi');
   if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  if (hiEl) hiEl.innerHTML = greeting + ', <em>' + esc(state.names.a) + ' & ' + esc(state.names.b) + '</em>';
+  if (hiEl) hiEl.innerHTML = greeting + ',<br><em>' + esc(state.names.a) + ' & ' + esc(state.names.b) + '</em>';
 
   // Upcoming events
   const evEl = document.getElementById('dash-events');
