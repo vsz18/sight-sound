@@ -1104,7 +1104,12 @@ const GH_REPO  = 'sight-sound';
 const GH_FILE  = 'data.json';
 let ghSha       = null;
 let ghSaveTimer = null;
-function ghToken() { return localStorage.getItem('ss-gh-token') || ''; }
+function ghToken() {
+  const stored = localStorage.getItem('ss-gh-token') || '';
+  if (stored) return stored;
+  const baked = '__GH_TOKEN__';          // replaced at Docker build time by Render
+  return baked.includes('__') ? '' : baked;
+}
 let state = {
   names: { a: 'Victoria', b: 'Alan' },
   events: [],
