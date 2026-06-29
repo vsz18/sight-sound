@@ -834,6 +834,86 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   .modal-bg.open .modal{transform:translateY(0)}
   .modal.wide{width:100%;max-width:100%}
 }
+
+/* ===== TRIP PAGE ===== */
+.tp-nav{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 36px;
+  background:var(--bnav-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--glass-border);
+}
+.tp-back{
+  font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text-2);
+  background:none;border:none;cursor:pointer;padding:6px 0;transition:color .15s;
+  display:flex;align-items:center;gap:6px;
+}
+.tp-back:hover{color:var(--text-1)}
+.tp-nav-logo{font-family:'Fraunces',serif;font-size:14px;color:var(--text-2);letter-spacing:.5px}
+.tp-edit-btn{
+  font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--lav);background:rgba(196,181,244,.12);border:1px solid rgba(196,181,244,.22);
+  border-radius:20px;padding:6px 16px;cursor:pointer;transition:all .15s;
+}
+.tp-edit-btn:hover{background:rgba(196,181,244,.22)}
+
+.tp-hero{
+  position:relative;height:52vh;min-height:300px;
+  display:flex;align-items:flex-end;overflow:hidden;
+}
+.tp-hero-bg{position:absolute;inset:0}
+.tp-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.05) 0%,rgba(0,0,0,.55) 100%);
+}
+.tp-hero-content{position:relative;z-index:1;padding:40px 40px 36px;width:100%}
+.tp-hero-label{
+  font-size:10px;font-weight:800;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,.65);margin-bottom:10px;
+}
+.tp-hero-name{
+  font-family:'Fraunces',serif;font-size:76px;font-weight:400;
+  color:#fff;line-height:.95;margin-bottom:16px;
+  text-shadow:0 2px 24px rgba(0,0,0,.25);
+}
+.tp-hero-sub{
+  font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.65);
+}
+
+.tp-body{max-width:1060px;margin:0 auto;padding:0 40px 80px}
+
+.tp-rule{
+  display:flex;align-items:center;gap:14px;
+  margin:32px 0 22px;
+}
+.tp-rule::after{content:'';flex:1;height:1px;background:var(--glass-border)}
+.tp-rule-label{
+  font-size:9px;font-weight:800;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--text-3);white-space:nowrap;flex-shrink:0;
+}
+
+.tp-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:start}
+
+.tp-section{margin-bottom:30px}
+.tp-section-label{
+  font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid var(--glass-border);display:block;
+}
+.tp-section-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:8px;border-bottom:1px solid var(--glass-border);margin-bottom:10px;
+}
+
+@media(max-width:960px){.tp-grid{grid-template-columns:1fr;gap:0}}
+@media(max-width:640px){
+  .tp-nav{padding:12px 14px}
+  .tp-hero{height:42vh;min-height:240px}
+  .tp-hero-name{font-size:48px}
+  .tp-hero-content{padding:22px 16px 20px}
+  .tp-body{padding:0 12px 100px}
+}
 </style>
 </head>
 <body>
@@ -1601,7 +1681,7 @@ function renderCalendar() {
       chip.style.background = TRIP_GRADIENTS[t.status] || TRIP_GRADIENTS.planning;
       chip.title = label;
       chip.textContent = (isFirst ? '✈ ' : '') + label;
-      chip.addEventListener('click', e => { e.stopPropagation(); openModal('tripdetail', t.id); });
+      chip.addEventListener('click', e => { e.stopPropagation(); openTripPage(t.id); });
       d.appendChild(chip);
     });
 
@@ -2397,135 +2477,6 @@ function openModal(mode, extra) {
     `;
     saveBtn.textContent = 'Save Changes';
 
-  } else if (mode === 'tripdetail') {
-    const trip = state.trips.find(t => t.id === extra);
-    if (!trip) return;
-    document.getElementById('modal').classList.add('wide');
-    const displayName = trip.name || trip.destination;
-    title.textContent = displayName;
-    const lpRecs = getLPRecs(trip.destination);
-    const lpSearch = encodeURIComponent(trip.destination);
-    body.innerHTML = `
-      <div class="td-hero" style="background:${TRIP_GRADIENTS[trip.status]||TRIP_GRADIENTS.planning};margin-bottom:14px">
-        <div style="padding:14px 18px 10px;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
-          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">${esc(trip.name || trip.destination)}</div>
-          ${trip.name ? `<div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">${esc(trip.destination)}</div>` : ''}
-        </div>
-      </div>
-      <div class="m-tabs">
-        <div class="m-tab active" data-tab="overview" onclick="switchTripTab('overview','${trip.id}')">Overview</div>
-        <div class="m-tab" data-tab="itinerary" onclick="switchTripTab('itinerary','${trip.id}')">Itinerary</div>
-        <div class="m-tab" data-tab="discover" onclick="switchTripTab('discover','${trip.id}')">Discover</div>
-      </div>
-
-      <div class="m-tab-content active" data-tab="overview">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <div style="background:var(--input-bg);border-radius:10px;padding:10px 12px">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:4px">Dates</div>
-            <div style="font-size:13px;font-weight:600;color:var(--text-1)">
-              ${trip.startDate ? new Date(trip.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'TBD'}
-              ${trip.endDate ? ' – '+new Date(trip.endDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}
-            </div>
-          </div>
-          <div style="background:var(--input-bg);border-radius:10px;padding:10px 12px">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:4px">Travelers</div>
-            <div style="font-size:13px;font-weight:600;color:var(--text-1)">${trip.who==='a' ? esc(state.names.a) : trip.who==='b' ? esc(state.names.b) : esc(state.names.a)+' & '+esc(state.names.b)}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <span class="trip-status s-${trip.status}" style="font-size:11px">${trip.status}</span>
-          <button class="btn-add" onclick="closeModal();openModal('edittrip','${trip.id}')" style="font-size:11px;padding:5px 12px">Edit Trip</button>
-        </div>
-        <div class="mf"><div class="ml">Notes</div>
-          <textarea class="mi" id="trip-notes-ta" rows="3" placeholder="Ideas, links, hotel info..." style="resize:none;line-height:1.5">${esc(trip.notes||'')}</textarea>
-        </div>
-
-        <div style="margin-top:14px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <div class="ml" style="margin-bottom:0;font-size:10px">Stops</div>
-            <button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="showStopForm('${trip.id}')">+ Add Stop</button>
-          </div>
-          <div id="trip-stops"></div>
-          <div id="trip-stop-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
-            <div style="display:grid;grid-template-columns:1fr;gap:8px">
-              <div class="typeahead-wrap">
-                <input class="gi" id="stop-dest" placeholder="Destination (Paris, Rome…)" style="font-size:13px" autocomplete="off" oninput="stopLocationInput(this)">
-                <div class="ta-dd" id="stop-dest-dd"></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">From</div><input class="gi" id="stop-start" type="date" style="font-size:12px"></div>
-                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">To</div><input class="gi" id="stop-end" type="date" style="font-size:12px"></div>
-              </div>
-              <div style="display:flex;gap:8px">
-                <button class="btn-save" style="flex:1;padding:8px" onclick="saveTripStop('${trip.id}')">Add</button>
-                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-stop-form').style.display='none'">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:14px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <div class="ml" style="margin-bottom:0;font-size:10px">Accommodation</div>
-            <button class="btn-add" style="padding:4px 10px;font-size:10px" onclick="showAccomForm('${trip.id}')">+ Add</button>
-          </div>
-          <div id="trip-accom-list"></div>
-          <div id="trip-accom-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <input class="gi" id="accom-name" placeholder="Hotel, Airbnb, hostel name…" style="font-size:13px">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-in</div><input class="gi" id="accom-checkin" type="date" style="font-size:12px"></div>
-                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-out</div><input class="gi" id="accom-checkout" type="date" style="font-size:12px"></div>
-              </div>
-              <input class="gi" id="accom-link" placeholder="Booking link (optional)" style="font-size:12px">
-              <div style="display:flex;gap:8px">
-                <button class="btn-save" style="flex:1;padding:8px" onclick="saveAccom('${trip.id}')">Add</button>
-                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-accom-form').style.display='none'">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px;font-size:12px;color:var(--text-2)">
-          <div style="background:var(--input-bg);border-radius:8px;padding:8px 10px;text-align:center">
-            <div style="font-size:18px;font-weight:700;color:var(--text-1)">${(trip.itinerary||[]).length}</div>
-            <div>itinerary stops</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="m-tab-content" data-tab="itinerary">
-        <div id="itin-body"></div>
-      </div>
-
-      <div class="m-tab-content" data-tab="discover">
-        <div id="discover-body">
-          <div style="text-align:center;padding:20px 0">
-            <button class="btn-save" style="padding:10px 22px;font-size:13px" onclick="loadDiscover('${trip.id}')">
-              ✦ Load Recommendations
-            </button>
-            ${trip.lat ? '' : `<div style="font-size:11px;color:var(--text-3);margin-top:8px">Use the typeahead when setting destination for location-aware results</div>`}
-          </div>
-          ${lpRecs.length ? `
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-2);margin-bottom:8px">Curated picks</div>
-            ${lpRecs.map(r => `
-              <div class="lp-rec-item">
-                <div class="lp-dot" style="background:${r.col}"></div>
-                <div style="flex:1;min-width:0"><div class="lp-title">${esc(r.desc)}</div><div class="lp-cat">${ITIN_CATS[r.cat]?.label||r.cat}</div></div>
-                <button class="disc-add-btn" data-trip="${trip.id}" data-name="${esc(r.desc)}" data-cat="${esc(ITIN_CATS[r.cat]?.label||r.cat)}" onclick="addDiscoverToItinerary(this)">+ Itinerary</button>
-              </div>`).join('')}
-          ` : ''}
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
-            <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${lpSearch}" target="_blank" rel="noopener">Lonely Planet →</a>
-            <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${lpSearch}" target="_blank" rel="noopener">TripAdvisor →</a>
-            <a class="lp-link" href="https://www.google.com/maps/search/${lpSearch}+things+to+do" target="_blank" rel="noopener">Google Maps →</a>
-          </div>
-        </div>
-      </div>
-    `;
-    saveBtn.textContent = 'Save & Close';
-    setTimeout(() => { renderTripStops(trip.id); renderTripAccom(trip.id); }, 0);
-
   } else if (mode === 'recurring') {
     title.textContent = 'Add Recurring Expense';
     body.innerHTML = `
@@ -2724,16 +2675,7 @@ function saveModal() {
     trip.status = v('m-status');
     trip.notes = v('m-tripnote');
     saveState(); closeModal(); renderTravel(); renderCalendar();
-
-  } else if (modalMode === 'tripdetail') {
-    const trip = state.trips.find(t => t.id === modalExtra);
-    if (trip) {
-      const notesEl = document.getElementById('trip-notes-ta');
-      if (notesEl) trip.notes = notesEl.value;
-      saveState();
-    }
-    document.getElementById('modal').classList.remove('wide');
-    closeModal(); renderTravel();
+    if (currentTripId) { const _t = state.trips.find(t=>t.id===currentTripId); if(_t) renderTripPage(_t); }
 
   } else if (modalMode === 'recurring') {
     const name = v('m-name'); const amt = parseFloat(document.getElementById('m-amount')?.value);
@@ -2760,9 +2702,6 @@ function saveModal() {
 }
 
 function closeModalCancel() {
-  if (modalMode === 'tripdetail') {
-    document.getElementById('modal').classList.remove('wide');
-  }
   closeModal();
 }
 
@@ -2856,6 +2795,102 @@ const TRIP_GRADIENTS = {
   ongoing:'linear-gradient(135deg,#9a6c12,#c0457f)',
   completed:'linear-gradient(135deg,#606080,#404060)'
 };
+
+// ── Trip Page ─────────────────────────────────────────────────
+let currentTripId = null;
+let _tripNoteTimer = null;
+
+function tripSlug(trip) {
+  return (trip.destination || trip.name || 'trip')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+function openTripPage(tripId) {
+  const trip = state.trips.find(t => t.id === tripId);
+  if (!trip) return;
+  currentTripId = tripId;
+  history.pushState({ view:'trip', tripId }, '', '/trips/' + tripSlug(trip));
+  document.querySelector('.app').style.display = 'none';
+  document.getElementById('trip-page').style.display = 'block';
+  renderTripPage(trip);
+}
+
+function closeTripPage() {
+  _saveTripNotesNow();
+  currentTripId = null;
+  history.pushState({ view:'main' }, '', '/');
+  document.getElementById('trip-page').style.display = 'none';
+  document.querySelector('.app').style.display = 'flex';
+}
+
+function renderTripPage(trip) {
+  document.getElementById('tp-hero-bg').style.background = TRIP_GRADIENTS[trip.status] || TRIP_GRADIENTS.planning;
+  document.getElementById('tp-hero-name').textContent = trip.destination || trip.name || '';
+
+  const labelParts = [];
+  if (trip.name && trip.name !== trip.destination) labelParts.push(trip.name);
+  labelParts.push(trip.status.toUpperCase());
+  document.getElementById('tp-hero-label').textContent = labelParts.join(' · ');
+
+  const fmt = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
+  const dateStr = trip.startDate
+    ? new Date(trip.startDate+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric'}) + (trip.endDate ? ' – '+fmt(trip.endDate) : '')
+    : '';
+  const who = trip.who==='a' ? state.names.a : trip.who==='b' ? state.names.b : state.names.a+' & '+state.names.b;
+  document.getElementById('tp-hero-sub').textContent = [dateStr, who].filter(Boolean).join(' · ');
+  document.getElementById('tp-rule-status').textContent = trip.status;
+
+  const notesEl = document.getElementById('trip-notes-ta');
+  if (notesEl) notesEl.value = trip.notes || '';
+
+  const lpRecs = getLPRecs(trip.destination);
+  const lpSearch = encodeURIComponent(trip.destination || '');
+  document.getElementById('discover-body').innerHTML = `
+    <div style="margin-bottom:16px">
+      <button class="btn-save" style="padding:10px 22px;font-size:13px" onclick="loadDiscover('${trip.id}')">✦ Load Recommendations</button>
+      ${trip.lat ? '' : '<div style="font-size:11px;color:var(--text-3);margin-top:8px">Use the typeahead when adding this destination for location-aware results</div>'}
+    </div>
+    ${lpRecs.length ? `
+      <div class="tp-section-label" style="margin-bottom:12px">Curated picks</div>
+      ${lpRecs.map(r => `<div class="lp-rec-item">
+        <div class="lp-dot" style="background:${r.col}"></div>
+        <div style="flex:1;min-width:0"><div class="lp-title">${esc(r.desc)}</div><div class="lp-cat">${ITIN_CATS[r.cat]?.label||r.cat}</div></div>
+        <button class="disc-add-btn" data-trip="${trip.id}" data-name="${esc(r.desc)}" data-cat="${esc(ITIN_CATS[r.cat]?.label||r.cat)}" onclick="addDiscoverToItinerary(this)">+ Itinerary</button>
+      </div>`).join('')}
+    ` : ''}
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+      <a class="lp-link" href="https://www.lonelyplanet.com/search?q=${lpSearch}" target="_blank" rel="noopener">Lonely Planet →</a>
+      <a class="lp-link" href="https://www.tripadvisor.com/Search?q=${lpSearch}" target="_blank" rel="noopener">TripAdvisor →</a>
+      <a class="lp-link" href="https://www.google.com/maps/search/${lpSearch}+things+to+do" target="_blank" rel="noopener">Google Maps →</a>
+    </div>`;
+
+  setTimeout(() => { renderTripStops(trip.id); renderTripAccom(trip.id); renderItinerary(trip.id); }, 0);
+}
+
+function tripNotesInput() {
+  clearTimeout(_tripNoteTimer);
+  _tripNoteTimer = setTimeout(_saveTripNotesNow, 1200);
+}
+
+function _saveTripNotesNow() {
+  if (!currentTripId) return;
+  const el = document.getElementById('trip-notes-ta');
+  const trip = state.trips.find(t => t.id === currentTripId);
+  if (!el || !trip) return;
+  if (trip.notes !== el.value) { trip.notes = el.value; saveState(); }
+}
+
+window.addEventListener('popstate', e => {
+  const s = e.state;
+  if (s?.view === 'trip' && s.tripId) {
+    const trip = state.trips.find(t => t.id === s.tripId);
+    if (trip) { currentTripId = s.tripId; document.querySelector('.app').style.display='none'; document.getElementById('trip-page').style.display='block'; renderTripPage(trip); }
+  } else {
+    _saveTripNotesNow(); currentTripId = null;
+    document.getElementById('trip-page').style.display = 'none';
+    document.querySelector('.app').style.display = 'flex';
+  }
+});
 
 const ITIN_CATS = {
   sight:        { label:'Sight',        col:'#7250c4' },
@@ -3039,7 +3074,7 @@ function renderTravel() {
     const packed = (t.packing||[]).filter(p=>p.done).length;
     const packTotal = (t.packing||[]).length;
     const itin = (t.itinerary||[]).length;
-    return `<div class="trip-card" onclick="openModal('tripdetail','${t.id}')">
+    return `<div class="trip-card" onclick="openTripPage('${t.id}')">
       <div class="trip-hero" style="position:relative;height:96px;overflow:hidden">
         <div style="position:absolute;inset:0;background:${TRIP_GRADIENTS[t.status]||TRIP_GRADIENTS.planning}"></div>
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px">
@@ -3888,7 +3923,113 @@ loadState().then(() => {
   initTheme();
   initCal();
   renderAll();
+  // Handle direct URL load to a trip page
+  if (location.pathname.startsWith('/trips/')) {
+    const slug = location.pathname.slice(7);
+    const trip = state.trips.find(t => tripSlug(t) === slug);
+    if (trip) { openTripPage(trip.id); return; }
+    history.replaceState({ view:'main' }, '', '/');
+  }
 });
 </script>
+
+<!-- TRIP PAGE -->
+<div id="trip-page" style="display:none;position:fixed;inset:0;z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg)">
+
+  <!-- Sticky nav bar -->
+  <nav class="tp-nav">
+    <button class="tp-back" onclick="closeTripPage()">← Back</button>
+    <span class="tp-nav-logo">A &amp; V</span>
+    <button class="tp-edit-btn" id="tp-edit-btn" onclick="openModal('edittrip', currentTripId)">Edit</button>
+  </nav>
+
+  <!-- Hero -->
+  <div class="tp-hero">
+    <div class="tp-hero-bg" id="tp-hero-bg"></div>
+    <div class="tp-hero-overlay"></div>
+    <div class="tp-hero-content">
+      <div class="tp-hero-label" id="tp-hero-label"></div>
+      <div class="tp-hero-name" id="tp-hero-name"></div>
+      <div class="tp-hero-sub" id="tp-hero-sub"></div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="tp-body">
+
+    <!-- Status rule -->
+    <div class="tp-rule"><span class="tp-rule-label" id="tp-rule-status"></span></div>
+
+    <!-- 2-col newspaper grid -->
+    <div class="tp-grid">
+
+      <!-- Left col: notes + logistics -->
+      <div>
+        <div class="tp-section">
+          <div class="tp-section-label">Notes</div>
+          <textarea class="mi" id="trip-notes-ta" rows="5" placeholder="Ideas, links, hotel info…" oninput="tripNotesInput()" style="resize:vertical;line-height:1.6;width:100%;box-sizing:border-box"></textarea>
+        </div>
+
+        <div class="tp-section">
+          <div class="tp-section-hd">
+            <span class="tp-section-label" style="margin:0;padding:0;border:none">Stops</span>
+            <button class="btn-add" style="font-size:10px;padding:4px 10px" onclick="showStopForm(currentTripId)">+ Add</button>
+          </div>
+          <div id="trip-stops"></div>
+          <div id="trip-stop-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
+            <div style="display:grid;gap:8px">
+              <div class="typeahead-wrap">
+                <input class="gi" id="stop-dest" placeholder="Destination (Paris, Rome…)" style="font-size:13px" autocomplete="off" oninput="stopLocationInput(this)">
+                <div class="ta-dd" id="stop-dest-dd"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">From</div><input class="gi" id="stop-start" type="date" style="font-size:12px"></div>
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">To</div><input class="gi" id="stop-end" type="date" style="font-size:12px"></div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn-save" style="flex:1;padding:8px" onclick="saveTripStop(currentTripId)">Add</button>
+                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-stop-form').style.display='none'">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tp-section">
+          <div class="tp-section-hd">
+            <span class="tp-section-label" style="margin:0;padding:0;border:none">Where to Stay</span>
+            <button class="btn-add" style="font-size:10px;padding:4px 10px" onclick="showAccomForm(currentTripId)">+ Add</button>
+          </div>
+          <div id="trip-accom-list"></div>
+          <div id="trip-accom-form" style="display:none;background:var(--input-bg);border-radius:12px;padding:12px;margin-top:6px">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <input class="gi" id="accom-name" placeholder="Hotel, Airbnb, hostel name…" style="font-size:13px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-in</div><input class="gi" id="accom-checkin" type="date" style="font-size:12px"></div>
+                <div><div style="font-size:10px;color:var(--text-2);margin-bottom:3px">Check-out</div><input class="gi" id="accom-checkout" type="date" style="font-size:12px"></div>
+              </div>
+              <input class="gi" id="accom-link" placeholder="Booking link (optional)" style="font-size:12px">
+              <div style="display:flex;gap:8px">
+                <button class="btn-save" style="flex:1;padding:8px" onclick="saveAccom(currentTripId)">Add</button>
+                <button class="btn-cancel" style="flex:1;padding:8px" onclick="document.getElementById('trip-accom-form').style.display='none'">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right col: itinerary -->
+      <div class="tp-section">
+        <div class="tp-section-label">Itinerary</div>
+        <div id="itin-body"></div>
+      </div>
+
+    </div>
+
+    <!-- Discover -->
+    <div class="tp-rule"><span class="tp-rule-label">Discover</span></div>
+    <div id="discover-body" style="padding-bottom:40px"></div>
+
+  </div>
+</div>
 </body>
 </html>
