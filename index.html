@@ -861,28 +861,19 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
 }
 .tp-edit-btn:hover{background:rgba(196,181,244,.22)}
 
-.tp-hero{
-  position:relative;height:52vh;min-height:300px;
-  display:flex;align-items:flex-end;overflow:hidden;
+.tp-hero{display:none}
+.tp-trip-header{padding:32px 0 4px}
+.tp-trip-label{
+  font-size:9px;font-weight:800;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:10px;
 }
-.tp-hero-bg{position:absolute;inset:0}
-.tp-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.05) 0%,rgba(0,0,0,.55) 100%);
+.tp-trip-name{
+  font-family:'Fraunces',serif;font-size:44px;font-weight:400;
+  color:var(--text-1);line-height:1.05;margin-bottom:10px;
 }
-.tp-hero-content{position:relative;z-index:1;padding:40px 40px 36px;width:100%}
-.tp-hero-label{
-  font-size:10px;font-weight:800;letter-spacing:4px;text-transform:uppercase;
-  color:rgba(255,255,255,.65);margin-bottom:10px;
-}
-.tp-hero-name{
-  font-family:'Fraunces',serif;font-size:76px;font-weight:400;
-  color:#fff;line-height:.95;margin-bottom:16px;
-  text-shadow:0 2px 24px rgba(0,0,0,.25);
-}
-.tp-hero-sub{
-  font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-  color:rgba(255,255,255,.65);
+.tp-trip-sub{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-2);
 }
 
 .tp-body{max-width:1060px;margin:0 auto;padding:0 40px 80px}
@@ -1556,14 +1547,13 @@ function renderHome() {
       const dateStr = sd ? sd.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + (ed ? ' – '+ed.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '') : 'Dates TBD';
       const grad = TRIP_GRADIENTS[next.status] || TRIP_GRADIENTS.planning;
       tripsEl.innerHTML = `
-        <div onclick="openTripPage('${next.id}');event.stopPropagation()" style="border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;min-height:60px;cursor:pointer">
-          <div style="position:absolute;inset:0;background:${grad};opacity:.75"></div>
+        <div onclick="openTripPage('${next.id}');event.stopPropagation()" style="border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;min-height:60px;cursor:pointer;background:#e8e3db">
           <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-between;gap:6px;padding:8px 11px">
             <div style="min-width:0;flex:1">
-              <div style="font-family:'Fraunces',serif;font-size:14px;color:#fff;font-weight:400;text-shadow:0 1px 3px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.name||next.destination)}</div>
-              ${next.name ? `<div style="font-size:9px;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.destination)}</div>` : ''}
+              <div style="font-family:'Fraunces',serif;font-size:14px;color:var(--text-1);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.name||next.destination)}</div>
+              ${next.name ? `<div style="font-size:9px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(next.destination)}</div>` : ''}
             </div>
-            ${countdownStr ? `<div style="font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.28);padding:3px 8px;border-radius:20px;flex-shrink:0">${countdownStr}</div>` : ''}
+            ${countdownStr ? `<div style="font-size:10px;font-weight:700;color:var(--text-1);background:rgba(0,0,0,.08);padding:3px 8px;border-radius:20px;flex-shrink:0">${countdownStr}</div>` : ''}
           </div>
         </div>
         <div style="font-size:10px;color:var(--text-2);margin-bottom:${rest.length?'8px':'0'}">${dateStr}</div>
@@ -2828,7 +2818,6 @@ function closeTripPage() {
 }
 
 function renderTripPage(trip) {
-  document.getElementById('tp-hero-bg').style.background = TRIP_GRADIENTS[trip.status] || TRIP_GRADIENTS.planning;
   document.getElementById('tp-hero-name').textContent = trip.destination || trip.name || '';
 
   const labelParts = [];
@@ -3079,11 +3068,10 @@ function renderTravel() {
     const packTotal = (t.packing||[]).length;
     const itin = (t.itinerary||[]).length;
     return `<div class="trip-card" onclick="openTripPage('${t.id}')">
-      <div class="trip-hero" style="position:relative;height:96px;overflow:hidden">
-        <div style="position:absolute;inset:0;background:${TRIP_GRADIENTS[t.status]||TRIP_GRADIENTS.planning}"></div>
+      <div class="trip-hero" style="position:relative;height:88px;overflow:hidden;background:#e8e3db">
         <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px">
-          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3)">${esc(t.name || t.destination)}</div>
-          ${t.name ? `<div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:1px">${esc(t.destination)}</div>` : ''}
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--text-1)">${esc(t.name || t.destination)}</div>
+          ${t.name ? `<div style="font-size:10px;color:var(--text-2);margin-top:1px">${esc(t.destination)}</div>` : ''}
         </div>
       </div>
       <div class="trip-body">
@@ -3802,7 +3790,6 @@ function renderMove() {
           </div>
           <div class="routine-prog-wrap">
             <div class="routine-prog-bar"><div class="routine-prog-fill" style="width:${pct}%;background:${col}"></div></div>
-            <div class="routine-prog-lbl">${pct===100?'Complete ✓':`${pct}% done`}</div>
           </div>
           ${exListHTML(r)}
         </div>`;
@@ -3947,19 +3934,16 @@ loadState().then(() => {
     <button class="tp-edit-btn" id="tp-edit-btn" onclick="openModal('edittrip', currentTripId)">Edit</button>
   </nav>
 
-  <!-- Hero -->
-  <div class="tp-hero">
-    <div class="tp-hero-bg" id="tp-hero-bg"></div>
-    <div class="tp-hero-overlay"></div>
-    <div class="tp-hero-content">
-      <div class="tp-hero-label" id="tp-hero-label"></div>
-      <div class="tp-hero-name" id="tp-hero-name"></div>
-      <div class="tp-hero-sub" id="tp-hero-sub"></div>
-    </div>
-  </div>
 
   <!-- Body -->
   <div class="tp-body">
+
+    <!-- Compact text header -->
+    <div class="tp-trip-header">
+      <div class="tp-trip-label" id="tp-hero-label"></div>
+      <div class="tp-trip-name" id="tp-hero-name"></div>
+      <div class="tp-trip-sub" id="tp-hero-sub"></div>
+    </div>
 
     <!-- Status rule -->
     <div class="tp-rule"><span class="tp-rule-label" id="tp-rule-status"></span></div>
