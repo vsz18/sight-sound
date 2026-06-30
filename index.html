@@ -25,7 +25,7 @@
   --teal:#208070;
   --sidebar:72px;
   /* theme-specific tokens */
-  --page-bg:linear-gradient(135deg,#f8f6f2 0%,#f5f2f9 45%,#f9f2f6 100%);
+  --page-bg:#f7f5f2;
   --sidebar-bg:rgba(255,255,255,0.72);
   --sidebar-border:rgba(0,0,0,0.07);
   --modal-bg:rgba(252,250,255,0.98);
@@ -2392,8 +2392,8 @@ function openModal(mode, extra) {
       </div>`;
     }).join('');
     body.innerHTML = `
-      <div class="mf"><div class="ml">Your Name</div><input class="mi" id="m-name-a" value="${esc(state.names.a)}" placeholder="Your name"></div>
-      <div class="mf"><div class="ml">Partner's Name</div><input class="mi" id="m-name-b" value="${esc(state.names.b)}" placeholder="Partner's name"></div>
+      <div class="mf"><div class="ml">Sight</div><input class="mi" id="m-name-a" value="${esc(state.names.a)}" placeholder="Your name"></div>
+      <div class="mf"><div class="ml">Sound</div><input class="mi" id="m-name-b" value="${esc(state.names.b)}" placeholder="Partner's name"></div>
       <div class="mf" style="margin-top:18px"><div class="ml">Dashboard Widgets</div>${widgetRows}</div>
       <div class="mf" style="margin-top:24px">
         <div class="ml">Data</div>
