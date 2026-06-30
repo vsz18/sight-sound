@@ -2822,7 +2822,7 @@ function openTripPage(tripId) {
 function closeTripPage() {
   _saveTripNotesNow();
   currentTripId = null;
-  history.pushState({ view:'main' }, '', '/');
+  try { history.pushState({ view:'main' }, '', '/'); } catch(e) {}
   document.getElementById('trip-page').style.display = 'none';
   document.querySelector('.app').style.display = 'flex';
 }
