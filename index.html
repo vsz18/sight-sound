@@ -824,6 +824,10 @@ body{background:var(--page-bg);position:relative;transition:background .35s ease
   /* Event list */
   .ev-bar{height:28px}
 
+  /* Travel planner header */
+  .travel-head{flex-wrap:wrap;gap:10px}
+  .travel-stats{margin-bottom:0}
+
   /* Modal → bottom sheet */
   .modal-bg{align-items:flex-end}
   .modal{
@@ -2809,7 +2813,7 @@ function openTripPage(tripId) {
   const trip = state.trips.find(t => t.id === tripId);
   if (!trip) return;
   currentTripId = tripId;
-  history.pushState({ view:'trip', tripId }, '', '/trips/' + tripSlug(trip));
+  try { history.pushState({ view:'trip', tripId }, '', '/trips/' + tripSlug(trip)); } catch(e) {}
   document.querySelector('.app').style.display = 'none';
   document.getElementById('trip-page').style.display = 'block';
   renderTripPage(trip);
@@ -2829,7 +2833,7 @@ function renderTripPage(trip) {
 
   const labelParts = [];
   if (trip.name && trip.name !== trip.destination) labelParts.push(trip.name);
-  labelParts.push(trip.status.toUpperCase());
+  labelParts.push((trip.status || 'planning').toUpperCase());
   document.getElementById('tp-hero-label').textContent = labelParts.join(' · ');
 
   const fmt = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
@@ -3934,7 +3938,7 @@ loadState().then(() => {
 </script>
 
 <!-- TRIP PAGE -->
-<div id="trip-page" style="display:none;position:fixed;inset:0;z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg)">
+<div id="trip-page" style="display:none;position:fixed;inset:0;z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--modal-bg)">
 
   <!-- Sticky nav bar -->
   <nav class="tp-nav">
